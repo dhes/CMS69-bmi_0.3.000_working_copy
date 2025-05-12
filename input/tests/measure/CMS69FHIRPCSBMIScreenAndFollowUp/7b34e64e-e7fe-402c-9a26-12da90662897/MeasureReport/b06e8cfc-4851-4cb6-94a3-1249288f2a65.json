@@ -1,0 +1,144 @@
+{
+  "resourceType": "MeasureReport",
+  "id": "b06e8cfc-4851-4cb6-94a3-1249288f2a65",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/test-case-cqfm"
+    ]
+  },
+  "contained": [
+    {
+      "resourceType": "Parameters",
+      "id": "9dd4eeea-2d09-41e0-8d1f-6375cc6467bd-parameters",
+      "parameter": [
+        {
+          "name": "subject",
+          "valueString": "7b34e64e-e7fe-402c-9a26-12da90662897"
+        }
+      ]
+    }
+  ],
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/cqf-inputParameters",
+      "valueReference": {
+        "reference": "#9dd4eeea-2d09-41e0-8d1f-6375cc6467bd-parameters"
+      }
+    },
+    {
+      "url": "http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/cqfm-testCaseDescription",
+      "valueMarkdown": "Patient age 79 and has 2 encs. during the MP.  February inpatient encounter discharge to healthcare facility for hospice care. December enc. BMI 40 kg/m2, and dietary recommend made due to dx  of \"Morbid (severe) obesity due to excess calories\" "
+    }
+  ],
+  "modifierExtension": [
+    {
+      "url": "http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/cqfm-isTestCase",
+      "valueBoolean": true
+    }
+  ],
+  "status": "complete",
+  "type": "individual",
+  "measure": "https://madie.cms.gov/Measure/CMS69FHIRPCSBMIScreenAndFollowUp",
+  "period": {
+    "start": "2026-01-01",
+    "end": "2026-12-31"
+  },
+  "group": [
+    {
+      "id": "Group_1",
+      "population": [
+        {
+          "id": "InitialPopulation_1",
+          "code": {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                "code": "initial-population",
+                "display": "Initial Population"
+              }
+            ]
+          },
+          "count": 1
+        },
+        {
+          "id": "Denominator_1",
+          "code": {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                "code": "denominator",
+                "display": "Denominator"
+              }
+            ]
+          },
+          "count": 1
+        },
+        {
+          "id": "DenominatorExclusion_1",
+          "code": {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                "code": "denominator-exclusion",
+                "display": "Denominator Exclusion"
+              }
+            ]
+          },
+          "count": 1
+        },
+        {
+          "id": "Numerator_1",
+          "code": {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                "code": "numerator",
+                "display": "Numerator"
+              }
+            ]
+          },
+          "count": 0
+        },
+        {
+          "id": "DenominatorException_1",
+          "code": {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                "code": "denominator-exception",
+                "display": "Denominator Exception"
+              }
+            ]
+          },
+          "count": 0
+        }
+      ],
+      "measureScore": {
+        "value": 1
+      }
+    }
+  ],
+  "evaluatedResource": [
+    {
+      "reference": "Patient/7b34e64e-e7fe-402c-9a26-12da90662897"
+    },
+    {
+      "reference": "Encounter/81edfbcf-4f91-46c1-9090-711abbf2343b"
+    },
+    {
+      "reference": "Observation/3af844a2-30d4-4219-8f41-29d1a01b8fa7"
+    },
+    {
+      "reference": "Procedure/3d4c6c3e-499e-44af-8352-d06d87f5a0cd"
+    },
+    {
+      "reference": "Encounter/a7848230-2dcd-4b42-8d5d-86ddb69bcd6d"
+    },
+    {
+      "reference": "Coverage/d82ca34b-cdb1-4af3-84db-e008d877f0ad"
+    },
+    {
+      "reference": "Organization/3ebce3f1-608f-40d8-b21c-e5f688ac908d"
+    }
+  ]
+}

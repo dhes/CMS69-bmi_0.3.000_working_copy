@@ -1,0 +1,307 @@
+library CMS69FHIRPCSBMIScreenAndFollowUp version '0.3.001'
+
+using QICore version '6.0.0'
+
+include FHIRHelpers version '4.4.000' called FHIRHelpers
+include Hospice version '6.15.001' called Hospice
+include PalliativeCare version '1.15.001' called PalliativeCare
+include QICoreCommon version '4.0.000' called QICoreCommon
+include SupplementalDataElements version '5.1.000' called SDE
+// from PalliativeCare
+// include Status version '1.13.000' called Status
+
+codesystem "ActCode": 'http://terminology.hl7.org/CodeSystem/v3-ActCode'
+codesystem "ICD10CM": 'http://hl7.org/fhir/sid/icd-10-cm'
+codesystem "LOINC": 'http://loinc.org'
+codesystem "ObservationCategoryCodes": 'http://terminology.hl7.org/CodeSystem/observation-category'
+
+valueset "Encounter to Evaluate BMI": 'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.600.1.1751'
+valueset "Follow Up for Above Normal BMI": 'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.600.1.1525'
+valueset "Follow Up for Below Normal BMI": 'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.600.1.1528'
+valueset "Medical Reason": 'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.1007'
+valueset "Medications for Above Normal BMI": 'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.1561'
+valueset "Medications for Below Normal BMI": 'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.1562'
+valueset "Overweight or Obese": 'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1047.502'
+valueset "Patient Declined": 'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.1582'
+valueset "Pregnancy or Other Related Diagnoses": 'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.600.1.1623'
+valueset "Referrals Where Weight Assessment May Occur": 'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.600.1.1527'
+valueset "Underweight": 'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.1563'
+// from PalliativeCare
+// valueset "Palliative Care Encounter": 'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.101.12.1090'
+// valueset "Palliative Care Intervention": 'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.198.12.1135'
+// valueset "Palliative Care Diagnosis": 'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.1167'
+
+code "Body mass index (BMI) [Ratio]": '39156-5' from "LOINC" display 'Body mass index (BMI) [Ratio]'
+code "Encounter for palliative care": 'Z51.5' from "ICD10CM" display 'Encounter for palliative care'
+code "Functional Assessment of Chronic Illness Therapy - Palliative Care Questionnaire (FACIT-Pal)": '71007-9' from "LOINC" display 'Functional Assessment of Chronic Illness Therapy - Palliative Care Questionnaire (FACIT-Pal)'
+code "virtual": 'VR' from "ActCode" display 'virtual'
+
+parameter "Measurement Period" Interval<DateTime> default Interval[@2026-01-01T00:00:00.0, @2026-12-31T23:59:59.999]
+
+context Patient
+
+// define HelloWorld:
+// 	'Hello World!'
+
+define "Initial Population":
+  exists "Qualifying Encounter During Day Of Measurement Period" QualifyingEncounter
+    where "AgeInYearsAt"(date from start of QualifyingEncounter.period) >= 18
+
+define "Denominator":
+  "Initial Population"
+
+define "Denominator Exclusions":
+  Hospice."Has Hospice Services"
+    or PalliativeCare."Has Palliative Care in the Measurement Period"
+    or "Is Pregnant During Day Of Measurement Period"
+
+define "Numerator":
+  exists "High BMI And Follow Up Provided"
+    or exists "Low BMI And Follow Up Provided"
+    or "Has Normal BMI"
+
+define "Denominator Exceptions":
+  exists "Medical Reason For Not Documenting A Follow Up Plan For Low Or High BMI"
+    or exists "Medical Reason Or Patient Reason For Not Performing BMI Exam"
+
+define "BMI During Measurement Period":
+  [USCoreBMIProfile] BMI
+    where BMI.value > 0 'kg/m2'
+      and BMI.status in { 'final', 'amended', 'corrected' }
+      and BMI.effective.toInterval ( ) during day of "Measurement Period"
+
+define "Documented Low BMI During Measurement Period":
+  "BMI During Measurement Period" BMI
+    where BMI.effective.toInterval ( ) during day of "Measurement Period"
+      and BMI.value < 18.5 'kg/m2'
+
+define "Documented High BMI During Measurement Period":
+  "BMI During Measurement Period" BMI
+    where BMI.effective.toInterval ( ) during day of "Measurement Period"
+      and BMI.value >= 25 'kg/m2'
+
+define "Has Normal BMI":
+  exists ( "BMI During Measurement Period" BMI
+      where BMI.value >= 18.5 'kg/m2'
+        and BMI.value < 25 'kg/m2'
+  )
+    and not ( exists "Documented High BMI During Measurement Period"
+        or exists "Documented Low BMI During Measurement Period"
+    )
+
+define "High BMI And Follow Up Provided":
+  "Documented High BMI During Measurement Period" HighBMI
+    with ( "High BMI Interventions Ordered"
+      union "High BMI Interventions Performed" ) HighBMIInterventions
+      such that Coalesce(HighBMIInterventions.performed.toInterval(), HighBMIInterventions.authoredOn.toInterval()) starts during day of "Measurement Period"
+
+define "High BMI Interventions Ordered":
+  ( ( [ServiceRequest: "Follow Up for Above Normal BMI"]
+      union [ServiceRequest: "Referrals Where Weight Assessment May Occur"]
+      union [MedicationRequest: "Medications for Above Normal BMI"] ) HighInterventionsOrdered
+      where HighInterventionsOrdered.reasonCode in "Overweight or Obese"
+        or ( exists [ConditionProblemsHealthConcerns: "Overweight or Obese"] OverweightObese
+            where ( OverweightObese.isProblemListItem ( )
+                or OverweightObese.isHealthConcern ( )
+            )
+              and OverweightObese.isActive ( )
+              and OverweightObese.prevalenceInterval ( ) starts before or on day of HighInterventionsOrdered.authoredOn
+        )
+  )
+
+define "High BMI Interventions Performed":
+  ( [Procedure: "Follow Up for Above Normal BMI"] HighInterventionsPerformed
+      where HighInterventionsPerformed.reasonCode in "Overweight or Obese"
+        or ( exists [ConditionProblemsHealthConcerns: "Overweight or Obese"] OverweightObese
+            where OverweightObese.prevalenceInterval ( ) starts before or on day of start of HighInterventionsPerformed.performed.toInterval ( )
+              and not ( OverweightObese.prevalenceInterval ( ) ends before day of start of HighInterventionsPerformed.performed.toInterval ( ) )
+        )
+  )
+
+define "Medical Reason Or Patient Reason For Not Performing BMI Exam":
+  [ObservationCancelled: code = "Body mass index (BMI) [Ratio]"] NoBMI
+    with "Qualifying Encounter During Day Of Measurement Period" QualifyingEncounter
+      such that NoBMI.effective.toInterval ( ) ends same day as start of QualifyingEncounter.period
+    where NoBMI.status = 'cancelled'
+      and ( NoBMI.notDoneReason in "Patient Declined"
+          or NoBMI.notDoneReason in "Medical Reason"
+      )
+
+define "Low BMI Interventions Ordered":
+  ( ( [ServiceRequest: "Follow Up for Below Normal BMI"]
+      union [ServiceRequest: "Referrals Where Weight Assessment May Occur"]
+      union [MedicationRequest: "Medications for Below Normal BMI"] ) LowInterventionsOrdered
+      where LowInterventionsOrdered.reasonCode in "Underweight"
+        or ( exists [ConditionProblemsHealthConcerns: "Underweight"] UnderweightDiagnosis
+            where ( UnderweightDiagnosis.isHealthConcern ( ) )
+              and UnderweightDiagnosis.isActive ( )
+              and UnderweightDiagnosis.prevalenceInterval ( ) starts before or on day of LowInterventionsOrdered.authoredOn
+              and LowInterventionsOrdered.authoredOn during day of "Measurement Period"
+        )
+  )
+
+define "Low BMI Interventions Performed":
+  ( [Procedure: "Follow Up for Below Normal BMI"] LowInterventionsPerformed
+      where LowInterventionsPerformed.reasonCode in "Underweight"
+        and LowInterventionsPerformed.status = 'completed'
+        or ( exists [ConditionProblemsHealthConcerns: "Underweight"] UnderweightDiagnosis
+            where ( UnderweightDiagnosis.isHealthConcern ( ) )
+              and UnderweightDiagnosis.isActive ( )
+              and UnderweightDiagnosis.prevalenceInterval ( ) starts before or on day of start of LowInterventionsPerformed.performed.toInterval ( )
+              and LowInterventionsPerformed.performed.toInterval ( ) during day of "Measurement Period"
+              and not ( UnderweightDiagnosis.prevalenceInterval ( ) ends before day of start of LowInterventionsPerformed.performed.toInterval ( ) )
+        )
+  )
+
+define "Low BMI And Follow Up Provided":
+  ( "Documented Low BMI During Measurement Period" LowBMI
+      with ( "Low BMI Interventions Ordered"
+        union "Low BMI Interventions Performed" ) LowBMIInterventions
+        such that Coalesce(LowBMIInterventions.performed.toInterval(), LowBMIInterventions.authoredOn.toInterval()) starts during day of "Measurement Period"
+  )
+
+define "Medical Reason For Not Documenting A Follow Up Plan For Low Or High BMI":
+  ( ( [ServiceNotRequested: "Referrals Where Weight Assessment May Occur"]
+      union [ServiceNotRequested: "Follow Up for Above Normal BMI"]
+      union [ServiceNotRequested: "Follow Up for Below Normal BMI"] ) NoBMIFollowUp
+      with "Qualifying Encounter During Day Of Measurement Period" QualifyingEncounter
+        such that NoBMIFollowUp.authoredOn same day as start of QualifyingEncounter.period
+      where NoBMIFollowUp.status ~ 'completed'
+        and NoBMIFollowUp.reasonRefused in "Medical Reason"
+  )
+    union ( ( [MedicationNotRequested: "Medications for Above Normal BMI"]
+        union [MedicationNotRequested: "Medications for Below Normal BMI"] ) NoBMIFollowUp
+        with "Qualifying Encounter During Day Of Measurement Period" QualifyingEncounter
+          such that NoBMIFollowUp.authoredOn same day as start of QualifyingEncounter.period
+        where NoBMIFollowUp.status ~ 'completed'
+          // TODO: https://oncprojectracking.healthit.gov/support/projects/MADIE/issues/MADIE-2124
+          // Expecting 4 failures until this translator issue is incorporated into MADiE
+          
+          
+          and NoBMIFollowUp.reasonCode in "Medical Reason"
+    )
+
+// define "Is Pregnant During Day Of Measurement Period":
+//   ( [ConditionProblemsHealthConcerns: "Pregnancy or Other Related Diagnoses"]
+//     union [ConditionEncounterDiagnosis: "Pregnancy or Other Related Diagnoses"] ) PregnancyDiagnosis
+//     with "Qualifying Encounter During Day Of Measurement Period" QualifyingEncounter
+//       such that PregnancyDiagnosis.clinicalStatus ~ QICoreCommon."active"
+//         and PregnancyDiagnosis.prevalenceInterval ( ) overlaps day of "Measurement Period"
+
+define "Is Pregnant During Day Of Measurement Period":
+  exists ( [ConditionProblemsHealthConcerns: "Pregnancy or Other Related Diagnoses"] PregnancyProblemDiagnosis
+    with "Qualifying Encounter During Day Of Measurement Period" QualifyingEncounter
+      such that PregnancyProblemDiagnosis.clinicalStatus ~ QICoreCommon."active"
+        and PregnancyProblemDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
+  )
+  or exists ( [ConditionEncounterDiagnosis: "Pregnancy or Other Related Diagnoses"] PregnancyEncounterDiagnosis
+    with "Qualifying Encounter During Day Of Measurement Period" QualifyingEncounter
+      such that PregnancyEncounterDiagnosis.clinicalStatus ~ QICoreCommon."active"
+        and PregnancyEncounterDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
+  )
+
+define "Qualifying Encounter During Day Of Measurement Period":
+  [Encounter: type in "Encounter to Evaluate BMI"] BMIEncounter
+    where BMIEncounter.period during day of "Measurement Period"
+      and BMIEncounter.class !~ "virtual"
+      and BMIEncounter.status = 'finished'
+
+define "SDE Ethnicity":
+  SDE."SDE Ethnicity"
+
+define "SDE Payer":
+  SDE."SDE Payer"
+
+define "SDE Race":
+  SDE."SDE Race"
+
+define "SDE Sex":
+  SDE."SDE Sex"
+
+// define Debug0MeasurementPeriod:
+//   "Measurement Period"
+
+// define Debug01ConditionProblemsHealthConcernsPalliativeCareDiagnosis:
+//   [ConditionProblemsHealthConcerns: "Palliative Care Diagnosis"]
+
+// define Debug02ConditionEncounterDiagnosisPalliativeCareDiagnosis:
+//   [ConditionEncounterDiagnosis: "Palliative Care Diagnosis"]
+
+// define Debug03UnionOfProblemAndEncounterConditions:
+//   (([ConditionProblemsHealthConcerns: "Palliative Care Diagnosis"])
+//     union ([ConditionEncounterDiagnosis: "Palliative Care Diagnosis"]))
+
+// define Debug04UnionOfProblemAndEncounterConditionsFirstDraftFix:
+//   flatten({
+//     [ConditionProblemsHealthConcerns: "Palliative Care Diagnosis"],
+//     [ConditionEncounterDiagnosis: "Palliative Care Diagnosis"]
+//   })
+
+// define Debug5ProblemAndEncounterConditionTypes:
+//     type of Debug1ConditionProblemsHealthConcernsPalliativeCareDiagnosis
+    // Type2: type of Debug2ConditionEncounterDiagnosisPalliativeCareDiagnosis //,
+    // Null1: Debug1ConditionProblemsHealthConcernsPalliativeCareDiagnosis null,
+    // Null2: Debug2ConditionEncounterDiagnosisPalliativeCareDiagnosis = null
+
+// define Debug4UseExistsOrExists:
+
+// define Debug05GetActualTypeConditionProblemsHealthConcerns:
+//   First([ConditionProblemsHealthConcerns: "Palliative Care Diagnosis"])
+
+// define Debug06GetActualTypeConditionEncounterDiagnosis:
+//   First([ConditionEncounterDiagnosis: "Palliative Care Diagnosis"])
+
+// define Debug07TryExistsInsteadOfUnion:
+//   exists ([ConditionProblemsHealthConcerns: "Palliative Care Diagnosis"])
+//     or exists ([ConditionEncounterDiagnosis: "Palliative Care Diagnosis"])
+
+// define Debug08EncounterPrevalenceInterval:
+//    First([ConditionEncounterDiagnosis: "Palliative Care Diagnosis"]).prevalenceInterval()
+// 	//  return First(PalliativeEncounterDiagnosis.prevalenceInterval())
+
+// define Debug09EncounterPrevalenceIntervalOverlaps:
+//    First([ConditionEncounterDiagnosis: "Palliative Care Diagnosis"]).prevalenceInterval() overlaps day of "Measurement Period"
+// 	//  return First(PalliativeEncounterDiagnosis.prevalenceInterval())
+
+// define Debug10DayFromStartOfMeasurementPeriod: 
+//   day from start of "Measurement Period"
+
+// define Debug11DayFromEntOfMeasurementPeriod: 
+//   day from end of "Measurement Period"
+
+// define Debug12ToDateStartOfMeasurementPeriod:
+//   ToDate(start of "Measurement Period")
+
+// from PalliativeCare - original
+// define "Has Palliative Care in the Measurement Period":
+//   exists ((([ObservationScreeningAssessment: "Functional Assessment of Chronic Illness Therapy - Palliative Care Questionnaire (FACIT-Pal)"]).isAssessmentPerformed()) PalliativeAssessment
+//       where PalliativeAssessment.effective.toInterval() overlaps day of "Measurement Period"
+//   )
+//     or exists ((([ConditionProblemsHealthConcerns: "Palliative Care Diagnosis"])
+//     union ([ConditionEncounterDiagnosis: "Palliative Care Diagnosis"])) PalliativeDiagnosis
+//         where PalliativeDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
+//     )
+//     or exists ((([Encounter: "Palliative Care Encounter"]).isEncounterPerformed()) PalliativeEncounter
+//         where PalliativeEncounter.period.toInterval() overlaps day of "Measurement Period"
+//     )
+//     or exists ((([Procedure: "Palliative Care Intervention"]).isInterventionPerformed()) PalliativeIntervention
+//         where PalliativeIntervention.performed.toInterval() overlaps day of "Measurement Period"
+//     )
+
+// working copy
+// define "Has Palliative Care in the Measurement Period":
+//   exists ((([ObservationScreeningAssessment: "Functional Assessment of Chronic Illness Therapy - Palliative Care Questionnaire (FACIT-Pal)"]).isAssessmentPerformed()) PalliativeAssessment
+//       where PalliativeAssessment.effective.toInterval() overlaps day of "Measurement Period"
+//   )
+//     or exists (([ConditionProblemsHealthConcerns: "Palliative Care Diagnosis"]) PalliativeProblemDiagnosis
+//         where PalliativeProblemDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
+//     )
+//     or exists (([ConditionEncounterDiagnosis: "Palliative Care Diagnosis"]) PalliativeEncounterDiagnosis
+//         where PalliativeEncounterDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
+//     )
+//     or exists ((([Encounter: "Palliative Care Encounter"]).isEncounterPerformed()) PalliativeEncounter
+//         where PalliativeEncounter.period.toInterval() overlaps day of "Measurement Period"
+//     )
+//     or exists ((([Procedure: "Palliative Care Intervention"]).isInterventionPerformed()) PalliativeIntervention
+//         where PalliativeIntervention.performed.toInterval() overlaps day of "Measurement Period"
+//     )

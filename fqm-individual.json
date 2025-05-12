@@ -1,0 +1,348 @@
+[
+  {
+    "id": "a40820d0-05fd-4a52-b6e7-2681a9e665bf",
+    "resourceType": "MeasureReport",
+    "period": {
+      "start": "2026-01-01",
+      "end": "2026-12-31"
+    },
+    "status": "complete",
+    "type": "individual",
+    "measure": "https://madie.cms.gov/Measure/CMS69FHIRPCSBMIScreenAndFollowUp",
+    "contained": [
+      {
+        "resourceType": "Observation",
+        "code": {
+          "text": "SDE Ethnicity"
+        },
+        "id": "68d24894-e94c-4f35-857f-7085d1153313",
+        "status": "final",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/cqf-measureInfo",
+            "extension": [
+              {
+                "url": "measure",
+                "valueCanonical": "https://madie.cms.gov/Measure/CMS69FHIRPCSBMIScreenAndFollowUp"
+              },
+              {
+                "url": "populationId",
+                "valueString": "SDE Ethnicity"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "resourceType": "Observation",
+        "code": {
+          "text": "SDE Payer"
+        },
+        "id": "8ad5e1bf-d5af-414d-a9d0-31b35278f011",
+        "status": "final",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/cqf-measureInfo",
+            "extension": [
+              {
+                "url": "measure",
+                "valueCanonical": "https://madie.cms.gov/Measure/CMS69FHIRPCSBMIScreenAndFollowUp"
+              },
+              {
+                "url": "populationId",
+                "valueString": "SDE Payer"
+              }
+            ]
+          }
+        ],
+        "valueCodeableConcept": {
+          "coding": []
+        }
+      },
+      {
+        "resourceType": "Observation",
+        "code": {
+          "text": "SDE Race"
+        },
+        "id": "135536bd-4be9-41b5-b5ba-658ad63f9e7c",
+        "status": "final",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/cqf-measureInfo",
+            "extension": [
+              {
+                "url": "measure",
+                "valueCanonical": "https://madie.cms.gov/Measure/CMS69FHIRPCSBMIScreenAndFollowUp"
+              },
+              {
+                "url": "populationId",
+                "valueString": "SDE Race"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "text": {
+      "status": "generated",
+      "div": ""
+    },
+    "group": [
+      {
+        "id": "Group_1",
+        "population": [
+          {
+            "count": 1,
+            "code": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                  "code": "initial-population",
+                  "display": "Initial Population"
+                }
+              ]
+            }
+          },
+          {
+            "count": 1,
+            "code": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                  "code": "denominator",
+                  "display": "Denominator"
+                }
+              ]
+            }
+          },
+          {
+            "count": 1,
+            "code": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                  "code": "denominator-exclusion",
+                  "display": "Denominator Exclusion"
+                }
+              ]
+            }
+          },
+          {
+            "count": 0,
+            "code": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                  "code": "numerator",
+                  "display": "Numerator"
+                }
+              ]
+            }
+          },
+          {
+            "count": 0,
+            "code": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                  "code": "denominator-exception",
+                  "display": "Denominator Exception"
+                }
+              ]
+            }
+          }
+        ],
+        "measureScore": {
+          "value": 0
+        }
+      }
+    ],
+    "evaluatedResource": [
+      {
+        "reference": "#68d24894-e94c-4f35-857f-7085d1153313"
+      },
+      {
+        "reference": "#8ad5e1bf-d5af-414d-a9d0-31b35278f011"
+      },
+      {
+        "reference": "#135536bd-4be9-41b5-b5ba-658ad63f9e7c"
+      }
+    ],
+    "subject": {
+      "reference": "Patient/1b102c21-830a-41a5-ac27-9aa77ea5adfe"
+    }
+  },
+  {
+    "id": "0d0dde92-ee94-4e95-8ef1-93be0019f91c",
+    "resourceType": "MeasureReport",
+    "period": {
+      "start": "2026-01-01",
+      "end": "2026-12-31"
+    },
+    "status": "complete",
+    "type": "individual",
+    "measure": "https://madie.cms.gov/Measure/CMS69FHIRPCSBMIScreenAndFollowUp",
+    "contained": [
+      {
+        "resourceType": "Observation",
+        "code": {
+          "text": "SDE Ethnicity"
+        },
+        "id": "6677ec00-fa57-4f66-9174-4f5d6704d020",
+        "status": "final",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/cqf-measureInfo",
+            "extension": [
+              {
+                "url": "measure",
+                "valueCanonical": "https://madie.cms.gov/Measure/CMS69FHIRPCSBMIScreenAndFollowUp"
+              },
+              {
+                "url": "populationId",
+                "valueString": "SDE Ethnicity"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "resourceType": "Observation",
+        "code": {
+          "text": "SDE Payer"
+        },
+        "id": "a878c0d6-3c27-4d8f-9d37-8adfec7bfc49",
+        "status": "final",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/cqf-measureInfo",
+            "extension": [
+              {
+                "url": "measure",
+                "valueCanonical": "https://madie.cms.gov/Measure/CMS69FHIRPCSBMIScreenAndFollowUp"
+              },
+              {
+                "url": "populationId",
+                "valueString": "SDE Payer"
+              }
+            ]
+          }
+        ],
+        "valueCodeableConcept": {
+          "coding": []
+        }
+      },
+      {
+        "resourceType": "Observation",
+        "code": {
+          "text": "SDE Race"
+        },
+        "id": "fb84d3f5-a8ae-4e97-a5df-9e05916dac28",
+        "status": "final",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/cqf-measureInfo",
+            "extension": [
+              {
+                "url": "measure",
+                "valueCanonical": "https://madie.cms.gov/Measure/CMS69FHIRPCSBMIScreenAndFollowUp"
+              },
+              {
+                "url": "populationId",
+                "valueString": "SDE Race"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "text": {
+      "status": "generated",
+      "div": ""
+    },
+    "group": [
+      {
+        "id": "Group_1",
+        "population": [
+          {
+            "count": 1,
+            "code": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                  "code": "initial-population",
+                  "display": "Initial Population"
+                }
+              ]
+            }
+          },
+          {
+            "count": 1,
+            "code": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                  "code": "denominator",
+                  "display": "Denominator"
+                }
+              ]
+            }
+          },
+          {
+            "count": 0,
+            "code": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                  "code": "denominator-exclusion",
+                  "display": "Denominator Exclusion"
+                }
+              ]
+            }
+          },
+          {
+            "count": 0,
+            "code": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                  "code": "numerator",
+                  "display": "Numerator"
+                }
+              ]
+            }
+          },
+          {
+            "count": 0,
+            "code": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                  "code": "denominator-exception",
+                  "display": "Denominator Exception"
+                }
+              ]
+            }
+          }
+        ],
+        "measureScore": {
+          "value": 0
+        }
+      }
+    ],
+    "evaluatedResource": [
+      {
+        "reference": "#6677ec00-fa57-4f66-9174-4f5d6704d020"
+      },
+      {
+        "reference": "#a878c0d6-3c27-4d8f-9d37-8adfec7bfc49"
+      },
+      {
+        "reference": "#fb84d3f5-a8ae-4e97-a5df-9e05916dac28"
+      }
+    ],
+    "subject": {
+      "reference": "Patient/1ba2fc33-1a1b-416b-bb3c-79ba5d0d3359"
+    }
+  }
+]
