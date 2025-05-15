@@ -149,7 +149,7 @@
         "valueString": "BMI During Measurement Period"
       }, {
         "url": "statement",
-        "valueString": "define \"BMI During Measurement Period\":\n  [USCoreBMIProfile] BMI\n    where BMI.value > 0 'kg/m2'\n      and BMI.status in { 'final', 'amended', 'corrected' }\n      and BMI.effective.toInterval ( ) during day of \"Measurement Period\""
+        "valueString": "define \"BMI During Measurement Period\":\n  [SimpleObservation] BMI\n    where BMI.value > 0 'kg/m2'\n      and BMI.status in { 'final', 'amended', 'corrected' }\n      and BMI.effective.toInterval ( ) during day of \"Measurement Period\""
       }, {
         "url": "displaySequence",
         "valueInteger": 2
@@ -671,13 +671,28 @@
         "valueString": "FHIRHelpers"
       }, {
         "url": "name",
+        "valueString": "ToInterval"
+      }, {
+        "url": "statement",
+        "valueString": "/*\n@description: Converts the given [Period](https://hl7.org/fhir/datatypes.html#Period)\nvalue to a CQL DateTime Interval\n@comment: If the start value of the given period is unspecified, the starting\nboundary of the resulting interval will be open (meaning the start of the interval\nis unknown, as opposed to interpreted as the beginning of time).\n*/\ndefine function ToInterval(period FHIR.Period):\n    if period is null then\n        null\n    else\n        if period.\"start\" is null then\n            Interval(period.\"start\".value, period.\"end\".value]\n        else\n            Interval[period.\"start\".value, period.\"end\".value]"
+      }, {
+        "url": "displaySequence",
+        "valueInteger": 37
+      } ]
+    }, {
+      "url": "http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/cqfm-logicDefinition",
+      "extension": [ {
+        "url": "libraryName",
+        "valueString": "FHIRHelpers"
+      }, {
+        "url": "name",
         "valueString": "ToCode"
       }, {
         "url": "statement",
         "valueString": "/*\n@description: Converts the given FHIR [Coding](https://hl7.org/fhir/datatypes.html#Coding) value to a CQL Code.\n*/\ndefine function ToCode(coding FHIR.Coding):\n    if coding is null then\n        null\n    else\n        System.Code {\n          code: coding.code.value,\n          system: coding.system.value,\n          version: coding.version.value,\n          display: coding.display.value\n        }"
       }, {
         "url": "displaySequence",
-        "valueInteger": 37
+        "valueInteger": 38
       } ]
     }, {
       "url": "http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/cqfm-logicDefinition",
@@ -692,7 +707,7 @@
         "valueString": "//Encounter, Performed\n//General usage unless required otherwise by measure intent (e.g., follow-up encounters)\ndefine fluent function isEncounterPerformed(Enc List<Encounter>):\n  Enc E\n    where E.status in {'finished', 'arrived', 'triaged', 'in-progress', 'onleave'}"
       }, {
         "url": "displaySequence",
-        "valueInteger": 38
+        "valueInteger": 39
       } ]
     }, {
       "url": "http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/cqfm-logicDefinition",
@@ -707,7 +722,7 @@
         "valueString": "//This library contains functions used to constrain FHIR resource elements for measures authored by NCQA, based on QICore 6.0.0 resources including IG and authoring patterns. The functions may appear similar to some QICoreCommon functions but differ in that they have constraints that are relevant for measures authored by NCQA.\n\n//Assessment, Performed\ndefine fluent function isAssessmentPerformed(Obs List<ObservationScreeningAssessment>):\n  Obs O\n    where O.status in { 'final', 'amended', 'corrected' }"
       }, {
         "url": "displaySequence",
-        "valueInteger": 39
+        "valueInteger": 40
       } ]
     }, {
       "url": "http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/cqfm-logicDefinition",
@@ -722,7 +737,7 @@
         "valueString": "//Intervention, Order\ndefine fluent function isInterventionOrder(ServiceRequest List<ServiceRequest>):\n  ServiceRequest S\n    where S.status in { 'active', 'completed' }\n      and S.intent = 'order'"
       }, {
         "url": "displaySequence",
-        "valueInteger": 40
+        "valueInteger": 41
       } ]
     }, {
       "url": "http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/cqfm-logicDefinition",
@@ -737,7 +752,7 @@
         "valueString": "//Intervention, Performed\ndefine fluent function isInterventionPerformed(Proc List<Procedure>):\n  Proc P\n    where P.status ~ 'completed'"
       }, {
         "url": "displaySequence",
-        "valueInteger": 41
+        "valueInteger": 42
       } ]
     } ],
     "name": "EffectiveDataRequirements",
@@ -987,11 +1002,11 @@
       "mustSupport": [ "url", "value.value" ]
     }, {
       "type": "Observation",
-      "profile": [ "http://hl7.org/fhir/us/core/StructureDefinition/us-core-bmi" ],
+      "profile": [ "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-simple-observation" ],
       "mustSupport": [ "value", "status", "status.value", "effective" ]
     }, {
       "type": "Observation",
-      "profile": [ "http://hl7.org/fhir/us/core/StructureDefinition/us-core-bmi" ],
+      "profile": [ "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-simple-observation" ],
       "mustSupport": [ "value", "status", "status.value", "effective" ]
     }, {
       "type": "ServiceRequest",
@@ -1020,11 +1035,11 @@
     }, {
       "type": "MedicationRequest",
       "profile": [ "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-medicationrequest" ],
-      "mustSupport": [ "medication.reference" ]
+      "mustSupport": [ "medication.reference.value" ]
     }, {
       "type": "Medication",
       "profile": [ "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-medication" ],
-      "mustSupport": [ "id" ]
+      "mustSupport": [ "id.value", "code" ]
     }, {
       "type": "Condition",
       "profile": [ "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-condition-problems-health-concerns" ],
@@ -1062,11 +1077,11 @@
       } ]
     }, {
       "type": "Observation",
-      "profile": [ "http://hl7.org/fhir/us/core/StructureDefinition/us-core-bmi" ],
+      "profile": [ "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-simple-observation" ],
       "mustSupport": [ "value", "status", "status.value", "effective" ]
     }, {
       "type": "Observation",
-      "profile": [ "http://hl7.org/fhir/us/core/StructureDefinition/us-core-bmi" ],
+      "profile": [ "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-simple-observation" ],
       "mustSupport": [ "value", "status", "status.value", "effective" ]
     }, {
       "type": "ServiceRequest",
@@ -1095,11 +1110,11 @@
     }, {
       "type": "MedicationRequest",
       "profile": [ "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-medicationrequest" ],
-      "mustSupport": [ "medication.reference" ]
+      "mustSupport": [ "medication.reference.value" ]
     }, {
       "type": "Medication",
       "profile": [ "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-medication" ],
-      "mustSupport": [ "id" ]
+      "mustSupport": [ "id.value", "code" ]
     }, {
       "type": "Condition",
       "profile": [ "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-condition-problems-health-concerns" ],
@@ -1134,11 +1149,11 @@
       } ]
     }, {
       "type": "Observation",
-      "profile": [ "http://hl7.org/fhir/us/core/StructureDefinition/us-core-bmi" ],
+      "profile": [ "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-simple-observation" ],
       "mustSupport": [ "value", "status", "status.value", "effective" ]
     }, {
       "type": "Observation",
-      "profile": [ "http://hl7.org/fhir/us/core/StructureDefinition/us-core-bmi" ],
+      "profile": [ "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-simple-observation" ],
       "mustSupport": [ "value", "status", "status.value", "effective" ]
     }, {
       "type": "Encounter",
@@ -1557,7 +1572,7 @@
   "title": "Preventive Care and Screening: Body Mass Index (BMI) Screening and Follow-Up PlanFHIR",
   "status": "active",
   "experimental": false,
-  "date": "2025-05-12T22:00:58+00:00",
+  "date": "2025-05-15T01:11:11+00:00",
   "publisher": "Centers for Medicare & Medicaid Services (CMS)",
   "contact": [ {
     "telecom": [ {

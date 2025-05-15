@@ -3,7 +3,7 @@
   "id": "9c4a9a3d-f92f-4276-829c-e4649abb8f20",
   "meta": {
     "profile": [
-      "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-simple-observation"
+      "http://hl7.org/fhir/us/core/StructureDefinition/us-core-bmi"
     ]
   },
   "status": "final",
@@ -12,8 +12,8 @@
       "coding": [
         {
           "system": "http://terminology.hl7.org/CodeSystem/observation-category",
-          "code": "procedure",
-          "display": "Procedure"
+          "code": "vital-signs",
+          "display": "Vital Signs"
         }
       ]
     }
@@ -35,7 +35,7 @@
   "valueQuantity": {
     "value": 40,
     "unit": "kg/m2",
-    "system": "https://ucum.org",
+    "system": "http://unitsofmeasure.org",
     "code": "kg/m2"
   }
 }

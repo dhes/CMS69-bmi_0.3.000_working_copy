@@ -3,7 +3,7 @@
   "id": "14926853-1f2b-43ef-805d-84adbdf2bfa6",
   "meta": {
     "profile": [
-      "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-simple-observation"
+      "http://hl7.org/fhir/us/core/StructureDefinition/us-core-bmi"
     ]
   },
   "status": "amended",
@@ -12,8 +12,8 @@
       "coding": [
         {
           "system": "http://terminology.hl7.org/CodeSystem/observation-category",
-          "code": "procedure",
-          "display": "Procedure"
+          "code": "vital-signs",
+          "display": "Vital Signs"
         }
       ]
     }

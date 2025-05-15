@@ -1,0 +1,37 @@
+{
+  "resourceType": "ValueSet",
+  "id": "yes-snomed",
+  "url": "http://example.org/fhir/ValueSet/yes-snomed",
+  "version": "1.0.0",
+  "name": "YesSnomedValueSet",
+  "title": "Yes (qualifier value) SNOMED ValueSet",
+  "status": "active",
+  "experimental": false,
+  "date": "2025-05-13",
+  "publisher": "Example Publisher",
+  "description": "A minimal ValueSet containing only SNOMED CT code '373066001' for 'Yes (qualifier value)'.",
+  "compose": {
+    "include": [
+      {
+        "system": "http://snomed.info/sct",
+        "concept": [
+          {
+            "code": "373066001",
+            "display": "Yes (qualifier value)"
+          }
+        ]
+      }
+    ]
+  },
+  "expansion": {
+    "identifier": "urn:uuid:e00e17f9-76ad-4d8e-8a70-yes-test-expansion",
+    "timestamp": "2025-05-13T12:00:00Z",
+    "contains": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "373066001",
+        "display": "Yes (qualifier value)"
+      }
+    ]
+  }
+}
