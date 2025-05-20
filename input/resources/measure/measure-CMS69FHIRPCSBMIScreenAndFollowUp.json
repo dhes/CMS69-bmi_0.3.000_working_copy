@@ -91,13 +91,6 @@
     }, {
       "url": "http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/cqfm-directReferenceCode",
       "valueCoding": {
-        "system": "http://snomed.info/sct",
-        "code": "373066001",
-        "display": "Yes (qualifier value)"
-      }
-    }, {
-      "url": "http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/cqfm-directReferenceCode",
-      "valueCoding": {
         "system": "http://loinc.org",
         "code": "71007-9",
         "display": "Functional Assessment of Chronic Illness Therapy - Palliative Care Questionnaire (FACIT-Pal)"
@@ -149,7 +142,7 @@
         "valueString": "BMI During Measurement Period"
       }, {
         "url": "statement",
-        "valueString": "define \"BMI During Measurement Period\":\n  [SimpleObservation] BMI\n    where BMI.value > 0 'kg/m2'\n      and BMI.status in { 'final', 'amended', 'corrected' }\n      and BMI.effective.toInterval ( ) during day of \"Measurement Period\""
+        "valueString": "define \"BMI During Measurement Period\":\n  [USCoreBMIProfile] BMI\n    where BMI.value > 0 'kg/m2'\n      and BMI.status in { 'final', 'amended', 'corrected' }\n      and BMI.effective.toInterval ( ) during day of \"Measurement Period\""
       }, {
         "url": "displaySequence",
         "valueInteger": 2
@@ -299,7 +292,7 @@
         "valueString": "Numerator"
       }, {
         "url": "statement",
-        "valueString": "define \"Numerator\":\n  exists \"High BMI And Follow Up Provided\"\n    or exists \"Low BMI And Follow Up Provided\"\n    or \"Has Normal BMI\""
+        "valueString": "define \"Numerator\": \n  exists \"High BMI And Follow Up Provided\"\n    or exists \"Low BMI And Follow Up Provided\"\n    or \"Has Normal BMI\""
       }, {
         "url": "displaySequence",
         "valueInteger": 12
@@ -329,7 +322,7 @@
         "valueString": "Initial Population"
       }, {
         "url": "statement",
-        "valueString": "// define HelloWorld:\n// \t'Hello World!'\n\ndefine \"Initial Population\":\n  exists \"Qualifying Encounter During Day Of Measurement Period\" QualifyingEncounter\n    where \"AgeInYearsAt\"(date from start of QualifyingEncounter.period) >= 18"
+        "valueString": "define \"Initial Population\":\n  exists \"Qualifying Encounter During Day Of Measurement Period\" QualifyingEncounter\n    where \"AgeInYearsAt\"(date from start of QualifyingEncounter.period) >= 18"
       }, {
         "url": "displaySequence",
         "valueInteger": 14
@@ -389,7 +382,7 @@
         "valueString": "Initial Population"
       }, {
         "url": "statement",
-        "valueString": "// define HelloWorld:\n// \t'Hello World!'\n\ndefine \"Initial Population\":\n  exists \"Qualifying Encounter During Day Of Measurement Period\" QualifyingEncounter\n    where \"AgeInYearsAt\"(date from start of QualifyingEncounter.period) >= 18"
+        "valueString": "define \"Initial Population\":\n  exists \"Qualifying Encounter During Day Of Measurement Period\" QualifyingEncounter\n    where \"AgeInYearsAt\"(date from start of QualifyingEncounter.period) >= 18"
       }, {
         "url": "displaySequence",
         "valueInteger": 18
@@ -434,7 +427,7 @@
         "valueString": "Has Hospice Services"
       }, {
         "url": "statement",
-        "valueString": "define \"Has Hospice Services\":\n  exists ((([Encounter: \"Encounter Inpatient\"]).isEncounterPerformed()) InpatientEncounter\n      where (InpatientEncounter.hospitalization.dischargeDisposition ~ \"Discharge to home for hospice care (procedure)\"\n          or InpatientEncounter.hospitalization.dischargeDisposition ~ \"Discharge to healthcare facility for hospice care (procedure)\"\n      )\n        and InpatientEncounter.period.toInterval() ends during day of \"Measurement Period\"\n  )\n    or exists ((([Encounter: \"Hospice Encounter\"]).isEncounterPerformed()) HospiceEncounter\n        where HospiceEncounter.period.toInterval() overlaps day of \"Measurement Period\"\n    )\n    or exists ((([ObservationScreeningAssessment: \"Hospice care [Minimum Data Set]\"]).isAssessmentPerformed()) HospiceAssessment\n        where HospiceAssessment.value ~ \"Yes (qualifier value)\"\n          and HospiceAssessment.effective.toInterval() overlaps day of \"Measurement Period\"\n    )\n    or exists ((([ServiceRequest: \"Hospice Care Ambulatory\"]).isInterventionOrder()) HospiceOrder\n        where HospiceOrder.authoredOn.toInterval() during day of \"Measurement Period\"\n    )\n    or exists ((([Procedure: \"Hospice Care Ambulatory\"]).isInterventionPerformed()) HospicePerformed\n        where HospicePerformed.performed.toInterval() overlaps day of \"Measurement Period\"\n    )\n    // or exists ((([ConditionProblemsHealthConcerns: \"Hospice Diagnosis\"])\n    //     union ([ConditionEncounterDiagnosis: \"Hospice Diagnosis\"])) HospiceCareDiagnosis\n    //     where HospiceCareDiagnosis.prevalenceInterval() overlaps day of \"Measurement Period\"\n    // )\n    or exists (([ConditionProblemsHealthConcerns: \"Hospice Diagnosis\"]) HospiceProblemiagnosis\n        where HospiceProblemiagnosis.prevalenceInterval() overlaps day of \"Measurement Period\"\n    )\n    or exists (([ConditionEncounterDiagnosis: \"Hospice Diagnosis\"]) HospiceEncounteriagnosis\n        where HospiceEncounteriagnosis.prevalenceInterval() overlaps day of \"Measurement Period\"\n    )"
+        "valueString": "define \"Has Hospice Services\":\n  exists ((([Encounter: \"Encounter Inpatient\"]).isEncounterPerformed()) InpatientEncounter\n      where (InpatientEncounter.hospitalization.dischargeDisposition ~ \"Discharge to home for hospice care (procedure)\"\n          or InpatientEncounter.hospitalization.dischargeDisposition ~ \"Discharge to healthcare facility for hospice care (procedure)\"\n      )\n        and InpatientEncounter.period.toInterval() ends during day of \"Measurement Period\"\n  )\n    or exists ((([Encounter: \"Hospice Encounter\"]).isEncounterPerformed()) HospiceEncounter\n        where HospiceEncounter.period.toInterval() overlaps day of \"Measurement Period\"\n    )\n    or exists ((([ObservationScreeningAssessment: \"Hospice care [Minimum Data Set]\"]).isAssessmentPerformed()) HospiceAssessment\n        // where HospiceAssessment.value ~ \"Yes (qualifier value)\"\n          where HospiceAssessment.effective.toInterval() overlaps day of \"Measurement Period\"\n    )\n    or exists ((([ServiceRequest: \"Hospice Care Ambulatory\"]).isInterventionOrder()) HospiceOrder\n        where HospiceOrder.authoredOn.toInterval() during day of \"Measurement Period\"\n    )\n    or exists ((([Procedure: \"Hospice Care Ambulatory\"]).isInterventionPerformed()) HospicePerformed\n        where HospicePerformed.performed.toInterval() overlaps day of \"Measurement Period\"\n    )\n    // or exists ((([ConditionProblemsHealthConcerns: \"Hospice Diagnosis\"])\n    //     union ([ConditionEncounterDiagnosis: \"Hospice Diagnosis\"])) HospiceCareDiagnosis\n    //     where HospiceCareDiagnosis.prevalenceInterval() overlaps day of \"Measurement Period\"\n    // )\n    or exists (([ConditionProblemsHealthConcerns: \"Hospice Diagnosis\"]) HospiceProblemiagnosis\n        where HospiceProblemiagnosis.prevalenceInterval() overlaps day of \"Measurement Period\"\n    )\n    or exists (([ConditionEncounterDiagnosis: \"Hospice Diagnosis\"]) HospiceEncounteriagnosis\n        where HospiceEncounteriagnosis.prevalenceInterval() overlaps day of \"Measurement Period\"\n    )"
       }, {
         "url": "displaySequence",
         "valueInteger": 21
@@ -479,7 +472,7 @@
         "valueString": "Denominator Exclusions"
       }, {
         "url": "statement",
-        "valueString": "define \"Denominator Exclusions\":\n  Hospice.\"Has Hospice Services\"\n    or PalliativeCare.\"Has Palliative Care in the Measurement Period\"\n    or \"Is Pregnant During Day Of Measurement Period\""
+        "valueString": "define \"Denominator Exclusions\": \n  Hospice.\"Has Hospice Services\"\n    or PalliativeCare.\"Has Palliative Care in the Measurement Period\"\n    or \"Is Pregnant During Day Of Measurement Period\""
       }, {
         "url": "displaySequence",
         "valueInteger": 24
@@ -554,7 +547,7 @@
         "valueString": "Denominator Exceptions"
       }, {
         "url": "statement",
-        "valueString": "define \"Denominator Exceptions\":\n  exists \"Medical Reason For Not Documenting A Follow Up Plan For Low Or High BMI\"\n    or exists \"Medical Reason Or Patient Reason For Not Performing BMI Exam\""
+        "valueString": "define \"Denominator Exceptions\": \n  exists \"Medical Reason For Not Documenting A Follow Up Plan For Low Or High BMI\"\n    or exists \"Medical Reason Or Patient Reason For Not Performing BMI Exam\""
       }, {
         "url": "displaySequence",
         "valueInteger": 29
@@ -1002,11 +995,11 @@
       "mustSupport": [ "url", "value.value" ]
     }, {
       "type": "Observation",
-      "profile": [ "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-simple-observation" ],
+      "profile": [ "http://hl7.org/fhir/us/core/StructureDefinition/us-core-bmi" ],
       "mustSupport": [ "value", "status", "status.value", "effective" ]
     }, {
       "type": "Observation",
-      "profile": [ "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-simple-observation" ],
+      "profile": [ "http://hl7.org/fhir/us/core/StructureDefinition/us-core-bmi" ],
       "mustSupport": [ "value", "status", "status.value", "effective" ]
     }, {
       "type": "ServiceRequest",
@@ -1077,11 +1070,11 @@
       } ]
     }, {
       "type": "Observation",
-      "profile": [ "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-simple-observation" ],
+      "profile": [ "http://hl7.org/fhir/us/core/StructureDefinition/us-core-bmi" ],
       "mustSupport": [ "value", "status", "status.value", "effective" ]
     }, {
       "type": "Observation",
-      "profile": [ "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-simple-observation" ],
+      "profile": [ "http://hl7.org/fhir/us/core/StructureDefinition/us-core-bmi" ],
       "mustSupport": [ "value", "status", "status.value", "effective" ]
     }, {
       "type": "ServiceRequest",
@@ -1149,11 +1142,11 @@
       } ]
     }, {
       "type": "Observation",
-      "profile": [ "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-simple-observation" ],
+      "profile": [ "http://hl7.org/fhir/us/core/StructureDefinition/us-core-bmi" ],
       "mustSupport": [ "value", "status", "status.value", "effective" ]
     }, {
       "type": "Observation",
-      "profile": [ "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-simple-observation" ],
+      "profile": [ "http://hl7.org/fhir/us/core/StructureDefinition/us-core-bmi" ],
       "mustSupport": [ "value", "status", "status.value", "effective" ]
     }, {
       "type": "Encounter",
@@ -1217,7 +1210,7 @@
     }, {
       "type": "Observation",
       "profile": [ "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-observation-screening-assessment" ],
-      "mustSupport": [ "code", "value", "effective" ],
+      "mustSupport": [ "code", "effective" ],
       "codeFilter": [ {
         "path": "code",
         "code": [ {
@@ -1572,7 +1565,7 @@
   "title": "Preventive Care and Screening: Body Mass Index (BMI) Screening and Follow-Up PlanFHIR",
   "status": "active",
   "experimental": false,
-  "date": "2025-05-15T01:11:11+00:00",
+  "date": "2025-05-20T17:54:41+00:00",
   "publisher": "Centers for Medicare & Medicaid Services (CMS)",
   "contact": [ {
     "telecom": [ {

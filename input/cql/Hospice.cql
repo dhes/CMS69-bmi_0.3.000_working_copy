@@ -20,7 +20,7 @@ code "Discharge to home for hospice care (procedure)": '428361000124107' from "S
 code "Hospice care [Minimum Data Set]": '45755-6' from "LOINC" display 'Hospice care [Minimum Data Set]'
 code "Yes (qualifier value)": '373066001' from "SNOMEDCT" display 'Yes (qualifier value)'
 
-parameter "Measurement Period" Interval<DateTime>  default Interval[@2026-01-01T00:00:00.0, @2026-12-31T23:59:59.999]
+parameter "Measurement Period" Interval<DateTime>
 
 context Patient
 
@@ -35,8 +35,8 @@ define "Has Hospice Services":
         where HospiceEncounter.period.toInterval() overlaps day of "Measurement Period"
     )
     or exists ((([ObservationScreeningAssessment: "Hospice care [Minimum Data Set]"]).isAssessmentPerformed()) HospiceAssessment
-        where HospiceAssessment.value ~ "Yes (qualifier value)"
-          and HospiceAssessment.effective.toInterval() overlaps day of "Measurement Period"
+        // where HospiceAssessment.value ~ "Yes (qualifier value)"
+          where HospiceAssessment.effective.toInterval() overlaps day of "Measurement Period"
     )
     or exists ((([ServiceRequest: "Hospice Care Ambulatory"]).isInterventionOrder()) HospiceOrder
         where HospiceOrder.authoredOn.toInterval() during day of "Measurement Period"
