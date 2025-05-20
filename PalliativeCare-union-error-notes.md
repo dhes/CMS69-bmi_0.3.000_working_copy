@@ -18,7 +18,7 @@
   Warning @ Condition.code (line 35, col4): Unable to check whether the code is in the value set 'http://hl7.org/fhir/us/core/ValueSet/us-core-condition-code|6.1.0' because the code system http://snomed.info/sct|2022-03 was not found
   Warning @ Condition (line 1, col2): Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)
 ```
-on patient *5d4c8* with encounter *28c0b633-0691-4a48-8349-ab80e2f438d1* that has this .catetory element
+on patient *5d48c* with encounter *28c0b633-0691-4a48-8349-ab80e2f438d1* that has this .catetory element
 ```
   "category": [
     {
