@@ -202,11 +202,11 @@
             "colId": "db209519-97e2-4f95-905f-ef15624e0bc7",
             "containerId": "dc105c24-503b-4ab4-9551-050d229ab49e",
             "name": "get condition 28c0b633",
-            "url": "Condition/28c0b633-0691-4a48-8349-ab80e2f438d1",
+            "url": "Condition/28c0b633-0691-4a48-8349-ab80e2f438d1/_history",
             "method": "GET",
             "sortNum": 5000,
             "created": "2025-05-19T21:14:18.368Z",
-            "modified": "2025-05-19T21:14:43.254Z",
+            "modified": "2025-05-20T20:20:47.295Z",
             "headers": []
         },
         {

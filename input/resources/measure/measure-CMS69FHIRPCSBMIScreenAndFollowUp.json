@@ -307,7 +307,7 @@
         "valueString": "Qualifying Encounter During Day Of Measurement Period"
       }, {
         "url": "statement",
-        "valueString": "define \"Qualifying Encounter During Day Of Measurement Period\":\n  [Encounter: type in \"Encounter to Evaluate BMI\"] BMIEncounter\n    where BMIEncounter.period during day of \"Measurement Period\"\n      and BMIEncounter.class !~ \"virtual\"\n      and BMIEncounter.status = 'finished'"
+        "valueString": "// define \"Is Pregnant During Day Of Measurement Period\":\n//   exists ( [ConditionProblemsHealthConcerns: \"Pregnancy or Other Related Diagnoses\"] PregnancyProblemDiagnosis\n//     with \"Qualifying Encounter During Day Of Measurement Period\" QualifyingEncounter\n//       such that PregnancyProblemDiagnosis.clinicalStatus ~ QICoreCommon.\"active\"\n//         and PregnancyProblemDiagnosis.prevalenceInterval() overlaps day of \"Measurement Period\"\n//   )\n//   or exists ( [ConditionEncounterDiagnosis: \"Pregnancy or Other Related Diagnoses\"] PregnancyEncounterDiagnosis\n//     with \"Qualifying Encounter During Day Of Measurement Period\" QualifyingEncounter\n//       such that PregnancyEncounterDiagnosis.clinicalStatus ~ QICoreCommon.\"active\"\n//         and PregnancyEncounterDiagnosis.prevalenceInterval() overlaps day of \"Measurement Period\"\n//   )\n\ndefine \"Qualifying Encounter During Day Of Measurement Period\":\n  [Encounter: type in \"Encounter to Evaluate BMI\"] BMIEncounter\n    where BMIEncounter.period during day of \"Measurement Period\"\n      and BMIEncounter.class !~ \"virtual\"\n      and BMIEncounter.status = 'finished'"
       }, {
         "url": "displaySequence",
         "valueInteger": 13
@@ -427,7 +427,7 @@
         "valueString": "Has Hospice Services"
       }, {
         "url": "statement",
-        "valueString": "define \"Has Hospice Services\":\n  exists ((([Encounter: \"Encounter Inpatient\"]).isEncounterPerformed()) InpatientEncounter\n      where (InpatientEncounter.hospitalization.dischargeDisposition ~ \"Discharge to home for hospice care (procedure)\"\n          or InpatientEncounter.hospitalization.dischargeDisposition ~ \"Discharge to healthcare facility for hospice care (procedure)\"\n      )\n        and InpatientEncounter.period.toInterval() ends during day of \"Measurement Period\"\n  )\n    or exists ((([Encounter: \"Hospice Encounter\"]).isEncounterPerformed()) HospiceEncounter\n        where HospiceEncounter.period.toInterval() overlaps day of \"Measurement Period\"\n    )\n    or exists ((([ObservationScreeningAssessment: \"Hospice care [Minimum Data Set]\"]).isAssessmentPerformed()) HospiceAssessment\n        // where HospiceAssessment.value ~ \"Yes (qualifier value)\"\n          where HospiceAssessment.effective.toInterval() overlaps day of \"Measurement Period\"\n    )\n    or exists ((([ServiceRequest: \"Hospice Care Ambulatory\"]).isInterventionOrder()) HospiceOrder\n        where HospiceOrder.authoredOn.toInterval() during day of \"Measurement Period\"\n    )\n    or exists ((([Procedure: \"Hospice Care Ambulatory\"]).isInterventionPerformed()) HospicePerformed\n        where HospicePerformed.performed.toInterval() overlaps day of \"Measurement Period\"\n    )\n    // or exists ((([ConditionProblemsHealthConcerns: \"Hospice Diagnosis\"])\n    //     union ([ConditionEncounterDiagnosis: \"Hospice Diagnosis\"])) HospiceCareDiagnosis\n    //     where HospiceCareDiagnosis.prevalenceInterval() overlaps day of \"Measurement Period\"\n    // )\n    or exists (([ConditionProblemsHealthConcerns: \"Hospice Diagnosis\"]) HospiceProblemiagnosis\n        where HospiceProblemiagnosis.prevalenceInterval() overlaps day of \"Measurement Period\"\n    )\n    or exists (([ConditionEncounterDiagnosis: \"Hospice Diagnosis\"]) HospiceEncounteriagnosis\n        where HospiceEncounteriagnosis.prevalenceInterval() overlaps day of \"Measurement Period\"\n    )"
+        "valueString": "define \"Has Hospice Services\":\n  exists ((([Encounter: \"Encounter Inpatient\"]).isEncounterPerformed()) InpatientEncounter\n      where (InpatientEncounter.hospitalization.dischargeDisposition ~ \"Discharge to home for hospice care (procedure)\"\n          or InpatientEncounter.hospitalization.dischargeDisposition ~ \"Discharge to healthcare facility for hospice care (procedure)\"\n      )\n        and InpatientEncounter.period.toInterval() ends during day of \"Measurement Period\"\n  )\n    or exists ((([Encounter: \"Hospice Encounter\"]).isEncounterPerformed()) HospiceEncounter\n        where HospiceEncounter.period.toInterval() overlaps day of \"Measurement Period\"\n    )\n    or exists ((([ObservationScreeningAssessment: \"Hospice care [Minimum Data Set]\"]).isAssessmentPerformed()) HospiceAssessment\n        // where HospiceAssessment.value ~ \"Yes (qualifier value)\"\n          where HospiceAssessment.effective.toInterval() overlaps day of \"Measurement Period\"\n    )\n    or exists ((([ServiceRequest: \"Hospice Care Ambulatory\"]).isInterventionOrder()) HospiceOrder\n        where HospiceOrder.authoredOn.toInterval() during day of \"Measurement Period\"\n    )\n    or exists ((([Procedure: \"Hospice Care Ambulatory\"]).isInterventionPerformed()) HospicePerformed\n        where HospicePerformed.performed.toInterval() overlaps day of \"Measurement Period\"\n    )\n    or exists ((([ConditionProblemsHealthConcerns: \"Hospice Diagnosis\"] P)\n        union ([ConditionEncounterDiagnosis: \"Hospice Diagnosis\"] E)) HospiceCareDiagnosis\n        where HospiceCareDiagnosis.prevalenceInterval() overlaps day of \"Measurement Period\"\n    )"
       }, {
         "url": "displaySequence",
         "valueInteger": 21
@@ -442,7 +442,7 @@
         "valueString": "Has Palliative Care in the Measurement Period"
       }, {
         "url": "statement",
-        "valueString": "define \"Has Palliative Care in the Measurement Period\":\n  exists ((([ObservationScreeningAssessment: \"Functional Assessment of Chronic Illness Therapy - Palliative Care Questionnaire (FACIT-Pal)\"]).isAssessmentPerformed()) PalliativeAssessment\n      where PalliativeAssessment.effective.toInterval() overlaps day of \"Measurement Period\"\n  )\n    // or exists ((([ConditionProblemsHealthConcerns: \"Palliative Care Diagnosis\"])\n    // union ([ConditionEncounterDiagnosis: \"Palliative Care Diagnosis\"])) PalliativeDiagnosis\n    //     where PalliativeDiagnosis.prevalenceInterval() overlaps day of \"Measurement Period\"\n    // )\n    or exists (([ConditionProblemsHealthConcerns: \"Palliative Care Diagnosis\"]) PalliativeProblemDiagnosis\n        where PalliativeProblemDiagnosis.prevalenceInterval() overlaps day of \"Measurement Period\"\n    )\n    or exists (([ConditionEncounterDiagnosis: \"Palliative Care Diagnosis\"]) PalliativeEncounterDiagnosis\n        where PalliativeEncounterDiagnosis.prevalenceInterval() overlaps day of \"Measurement Period\"\n    )\n    or exists ((([Encounter: \"Palliative Care Encounter\"]).isEncounterPerformed()) PalliativeEncounter\n        where PalliativeEncounter.period.toInterval() overlaps day of \"Measurement Period\"\n    )\n    or exists ((([Procedure: \"Palliative Care Intervention\"]).isInterventionPerformed()) PalliativeIntervention\n        where PalliativeIntervention.performed.toInterval() overlaps day of \"Measurement Period\"\n    )"
+        "valueString": "define \"Has Palliative Care in the Measurement Period\":\n  exists ((([ObservationScreeningAssessment: \"Functional Assessment of Chronic Illness Therapy - Palliative Care Questionnaire (FACIT-Pal)\"]).isAssessmentPerformed()) PalliativeAssessment\n      where PalliativeAssessment.effective.toInterval() overlaps day of \"Measurement Period\"\n  )\n    or exists (([ConditionProblemsHealthConcerns: \"Palliative Care Diagnosis\"] P\n    union [ConditionEncounterDiagnosis: \"Palliative Care Diagnosis\"] E) PalliativeDiagnosis\n        where PalliativeDiagnosis.prevalenceInterval() overlaps day of \"Measurement Period\"\n    )\n    // or exists (([ConditionProblemsHealthConcerns: \"Palliative Care Diagnosis\"]) PalliativeProblemDiagnosis\n    //     where PalliativeProblemDiagnosis.prevalenceInterval() overlaps day of \"Measurement Period\"\n    // )\n    // or exists (([ConditionEncounterDiagnosis: \"Palliative Care Diagnosis\"]) PalliativeEncounterDiagnosis\n    //     where PalliativeEncounterDiagnosis.prevalenceInterval() overlaps day of \"Measurement Period\"\n    // )\n    or exists ((([Encounter: \"Palliative Care Encounter\"]).isEncounterPerformed()) PalliativeEncounter\n        where PalliativeEncounter.period.toInterval() overlaps day of \"Measurement Period\"\n    )\n    or exists ((([Procedure: \"Palliative Care Intervention\"]).isInterventionPerformed()) PalliativeIntervention\n        where PalliativeIntervention.performed.toInterval() overlaps day of \"Measurement Period\"\n    )"
       }, {
         "url": "displaySequence",
         "valueInteger": 22
@@ -457,7 +457,7 @@
         "valueString": "Is Pregnant During Day Of Measurement Period"
       }, {
         "url": "statement",
-        "valueString": "// define \"Is Pregnant During Day Of Measurement Period\":\n//   ( [ConditionProblemsHealthConcerns: \"Pregnancy or Other Related Diagnoses\"]\n//     union [ConditionEncounterDiagnosis: \"Pregnancy or Other Related Diagnoses\"] ) PregnancyDiagnosis\n//     with \"Qualifying Encounter During Day Of Measurement Period\" QualifyingEncounter\n//       such that PregnancyDiagnosis.clinicalStatus ~ QICoreCommon.\"active\"\n//         and PregnancyDiagnosis.prevalenceInterval ( ) overlaps day of \"Measurement Period\"\n\ndefine \"Is Pregnant During Day Of Measurement Period\":\n  exists ( [ConditionProblemsHealthConcerns: \"Pregnancy or Other Related Diagnoses\"] PregnancyProblemDiagnosis\n    with \"Qualifying Encounter During Day Of Measurement Period\" QualifyingEncounter\n      such that PregnancyProblemDiagnosis.clinicalStatus ~ QICoreCommon.\"active\"\n        and PregnancyProblemDiagnosis.prevalenceInterval() overlaps day of \"Measurement Period\"\n  )\n  or exists ( [ConditionEncounterDiagnosis: \"Pregnancy or Other Related Diagnoses\"] PregnancyEncounterDiagnosis\n    with \"Qualifying Encounter During Day Of Measurement Period\" QualifyingEncounter\n      such that PregnancyEncounterDiagnosis.clinicalStatus ~ QICoreCommon.\"active\"\n        and PregnancyEncounterDiagnosis.prevalenceInterval() overlaps day of \"Measurement Period\"\n  )"
+        "valueString": "define \"Is Pregnant During Day Of Measurement Period\":\n  ( [ConditionProblemsHealthConcerns: \"Pregnancy or Other Related Diagnoses\"] P\n    union [ConditionEncounterDiagnosis: \"Pregnancy or Other Related Diagnoses\"] E) PregnancyDiagnosis\n    with \"Qualifying Encounter During Day Of Measurement Period\" QualifyingEncounter\n      such that PregnancyDiagnosis.clinicalStatus ~ QICoreCommon.\"active\"\n        and PregnancyDiagnosis.prevalenceInterval ( ) overlaps day of \"Measurement Period\""
       }, {
         "url": "displaySequence",
         "valueInteger": 23
@@ -472,7 +472,7 @@
         "valueString": "Denominator Exclusions"
       }, {
         "url": "statement",
-        "valueString": "define \"Denominator Exclusions\": \n  Hospice.\"Has Hospice Services\"\n    or PalliativeCare.\"Has Palliative Care in the Measurement Period\"\n    or \"Is Pregnant During Day Of Measurement Period\""
+        "valueString": "define \"Denominator Exclusions\": \n  Hospice.\"Has Hospice Services\"\n    or PalliativeCare.\"Has Palliative Care in the Measurement Period\"\n    or exists \"Is Pregnant During Day Of Measurement Period\""
       }, {
         "url": "displaySequence",
         "valueInteger": 24
@@ -1298,23 +1298,15 @@
     }, {
       "type": "Condition",
       "profile": [ "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-condition-problems-health-concerns" ],
-      "mustSupport": [ "code", "clinicalStatus" ],
+      "mustSupport": [ "code" ],
       "codeFilter": [ {
         "path": "code",
         "valueSet": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.600.1.1623"
       } ]
     }, {
-      "type": "Encounter",
-      "profile": [ "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-encounter" ],
-      "mustSupport": [ "type", "period", "class", "status", "status.value" ],
-      "codeFilter": [ {
-        "path": "type",
-        "valueSet": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.600.1.1751"
-      } ]
-    }, {
       "type": "Condition",
       "profile": [ "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-condition-encounter-diagnosis" ],
-      "mustSupport": [ "code", "clinicalStatus" ],
+      "mustSupport": [ "code" ],
       "codeFilter": [ {
         "path": "code",
         "valueSet": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.600.1.1623"
@@ -1565,7 +1557,7 @@
   "title": "Preventive Care and Screening: Body Mass Index (BMI) Screening and Follow-Up PlanFHIR",
   "status": "active",
   "experimental": false,
-  "date": "2025-05-20T17:54:41+00:00",
+  "date": "2025-05-21T00:22:52+00:00",
   "publisher": "Centers for Medicare & Medicaid Services (CMS)",
   "contact": [ {
     "telecom": [ {

@@ -20,7 +20,7 @@ code "Discharge to home for hospice care (procedure)": '428361000124107' from "S
 code "Hospice care [Minimum Data Set]": '45755-6' from "LOINC" display 'Hospice care [Minimum Data Set]'
 code "Yes (qualifier value)": '373066001' from "SNOMEDCT" display 'Yes (qualifier value)'
 
-parameter "Measurement Period" Interval<DateTime>
+parameter "Measurement Period" Interval<DateTime> // default Interval[@2026-01-01T00:00:00.0, @2026-12-31T23:59:59.999]
 
 context Patient
 
@@ -44,13 +44,13 @@ define "Has Hospice Services":
     or exists ((([Procedure: "Hospice Care Ambulatory"]).isInterventionPerformed()) HospicePerformed
         where HospicePerformed.performed.toInterval() overlaps day of "Measurement Period"
     )
-    // or exists ((([ConditionProblemsHealthConcerns: "Hospice Diagnosis"])
-    //     union ([ConditionEncounterDiagnosis: "Hospice Diagnosis"])) HospiceCareDiagnosis
-    //     where HospiceCareDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
+    or exists ((([ConditionProblemsHealthConcerns: "Hospice Diagnosis"] P)
+        union ([ConditionEncounterDiagnosis: "Hospice Diagnosis"] E)) HospiceCareDiagnosis
+        where HospiceCareDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
+    )
+    // or exists (([ConditionProblemsHealthConcerns: "Hospice Diagnosis"]) HospiceProblemiagnosis
+    //     where HospiceProblemiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
     // )
-    or exists (([ConditionProblemsHealthConcerns: "Hospice Diagnosis"]) HospiceProblemiagnosis
-        where HospiceProblemiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
-    )
-    or exists (([ConditionEncounterDiagnosis: "Hospice Diagnosis"]) HospiceEncounteriagnosis
-        where HospiceEncounteriagnosis.prevalenceInterval() overlaps day of "Measurement Period"
-    )
+    // or exists (([ConditionEncounterDiagnosis: "Hospice Diagnosis"]) HospiceEncounteriagnosis
+    //     where HospiceEncounteriagnosis.prevalenceInterval() overlaps day of "Measurement Period"
+    // )

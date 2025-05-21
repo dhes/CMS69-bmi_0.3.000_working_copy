@@ -30,7 +30,7 @@ code "Encounter for palliative care": 'Z51.5' from "ICD10CM" display 'Encounter 
 code "Functional Assessment of Chronic Illness Therapy - Palliative Care Questionnaire (FACIT-Pal)": '71007-9' from "LOINC" display 'Functional Assessment of Chronic Illness Therapy - Palliative Care Questionnaire (FACIT-Pal)'
 code "virtual": 'VR' from "ActCode" display 'virtual'
 
-parameter "Measurement Period" Interval<DateTime>
+parameter "Measurement Period" Interval<DateTime> // default Interval[@2026-01-01T00:00:00.0, @2026-12-31T23:59:59.999]
 
 context Patient
 
@@ -44,7 +44,7 @@ define "Denominator":
 define "Denominator Exclusions": 
   Hospice."Has Hospice Services"
     or PalliativeCare."Has Palliative Care in the Measurement Period"
-    or "Is Pregnant During Day Of Measurement Period"
+    or exists "Is Pregnant During Day Of Measurement Period"
 
 define "Numerator": 
   exists "High BMI And Follow Up Provided"
@@ -172,24 +172,24 @@ define "Medical Reason For Not Documenting A Follow Up Plan For Low Or High BMI"
           and NoBMIFollowUp.reasonCode in "Medical Reason"
     )
 
-// define "Is Pregnant During Day Of Measurement Period":
-//   ( [ConditionProblemsHealthConcerns: "Pregnancy or Other Related Diagnoses"]
-//     union [ConditionEncounterDiagnosis: "Pregnancy or Other Related Diagnoses"] ) PregnancyDiagnosis
-//     with "Qualifying Encounter During Day Of Measurement Period" QualifyingEncounter
-//       such that PregnancyDiagnosis.clinicalStatus ~ QICoreCommon."active"
-//         and PregnancyDiagnosis.prevalenceInterval ( ) overlaps day of "Measurement Period"
-
 define "Is Pregnant During Day Of Measurement Period":
-  exists ( [ConditionProblemsHealthConcerns: "Pregnancy or Other Related Diagnoses"] PregnancyProblemDiagnosis
+  ( [ConditionProblemsHealthConcerns: "Pregnancy or Other Related Diagnoses"] P
+    union [ConditionEncounterDiagnosis: "Pregnancy or Other Related Diagnoses"] E) PregnancyDiagnosis
     with "Qualifying Encounter During Day Of Measurement Period" QualifyingEncounter
-      such that PregnancyProblemDiagnosis.clinicalStatus ~ QICoreCommon."active"
-        and PregnancyProblemDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
-  )
-  or exists ( [ConditionEncounterDiagnosis: "Pregnancy or Other Related Diagnoses"] PregnancyEncounterDiagnosis
-    with "Qualifying Encounter During Day Of Measurement Period" QualifyingEncounter
-      such that PregnancyEncounterDiagnosis.clinicalStatus ~ QICoreCommon."active"
-        and PregnancyEncounterDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
-  )
+      such that PregnancyDiagnosis.clinicalStatus ~ QICoreCommon."active"
+        and PregnancyDiagnosis.prevalenceInterval ( ) overlaps day of "Measurement Period"
+
+// define "Is Pregnant During Day Of Measurement Period":
+//   exists ( [ConditionProblemsHealthConcerns: "Pregnancy or Other Related Diagnoses"] PregnancyProblemDiagnosis
+//     with "Qualifying Encounter During Day Of Measurement Period" QualifyingEncounter
+//       such that PregnancyProblemDiagnosis.clinicalStatus ~ QICoreCommon."active"
+//         and PregnancyProblemDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
+//   )
+//   or exists ( [ConditionEncounterDiagnosis: "Pregnancy or Other Related Diagnoses"] PregnancyEncounterDiagnosis
+//     with "Qualifying Encounter During Day Of Measurement Period" QualifyingEncounter
+//       such that PregnancyEncounterDiagnosis.clinicalStatus ~ QICoreCommon."active"
+//         and PregnancyEncounterDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
+//   )
 
 define "Qualifying Encounter During Day Of Measurement Period":
   [Encounter: type in "Encounter to Evaluate BMI"] BMIEncounter

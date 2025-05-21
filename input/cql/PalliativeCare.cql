@@ -14,7 +14,7 @@ valueset "Palliative Care Diagnosis": 'http://cts.nlm.nih.gov/fhir/ValueSet/2.16
 
 code "Functional Assessment of Chronic Illness Therapy - Palliative Care Questionnaire (FACIT-Pal)": '71007-9' from "LOINC" display 'Functional Assessment of Chronic Illness Therapy - Palliative Care Questionnaire (FACIT-Pal)'
 
-parameter "Measurement Period" Interval<DateTime>
+parameter "Measurement Period" Interval<DateTime> // default Interval[@2026-01-01T00:00:00.0, @2026-12-31T23:59:59.999]
 
 context Patient
 
@@ -22,16 +22,16 @@ define "Has Palliative Care in the Measurement Period":
   exists ((([ObservationScreeningAssessment: "Functional Assessment of Chronic Illness Therapy - Palliative Care Questionnaire (FACIT-Pal)"]).isAssessmentPerformed()) PalliativeAssessment
       where PalliativeAssessment.effective.toInterval() overlaps day of "Measurement Period"
   )
-    // or exists ((([ConditionProblemsHealthConcerns: "Palliative Care Diagnosis"])
-    // union ([ConditionEncounterDiagnosis: "Palliative Care Diagnosis"])) PalliativeDiagnosis
-    //     where PalliativeDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
+    or exists (([ConditionProblemsHealthConcerns: "Palliative Care Diagnosis"] P
+    union [ConditionEncounterDiagnosis: "Palliative Care Diagnosis"] E) PalliativeDiagnosis
+        where PalliativeDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
+    )
+    // or exists (([ConditionProblemsHealthConcerns: "Palliative Care Diagnosis"]) PalliativeProblemDiagnosis
+    //     where PalliativeProblemDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
     // )
-    or exists (([ConditionProblemsHealthConcerns: "Palliative Care Diagnosis"]) PalliativeProblemDiagnosis
-        where PalliativeProblemDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
-    )
-    or exists (([ConditionEncounterDiagnosis: "Palliative Care Diagnosis"]) PalliativeEncounterDiagnosis
-        where PalliativeEncounterDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
-    )
+    // or exists (([ConditionEncounterDiagnosis: "Palliative Care Diagnosis"]) PalliativeEncounterDiagnosis
+    //     where PalliativeEncounterDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
+    // )
     or exists ((([Encounter: "Palliative Care Encounter"]).isEncounterPerformed()) PalliativeEncounter
         where PalliativeEncounter.period.toInterval() overlaps day of "Measurement Period"
     )
