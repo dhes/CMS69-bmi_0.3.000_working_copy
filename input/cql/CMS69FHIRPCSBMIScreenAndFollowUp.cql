@@ -121,7 +121,11 @@ define "High BMI Interventions Performed":
   ( [Procedure: "Follow Up for Above Normal BMI"] HighInterventionsPerformed
       where HighInterventionsPerformed.reasonCode in "Overweight or Obese"
         or ( exists [ConditionProblemsHealthConcerns: "Overweight or Obese"] OverweightObese
-            where OverweightObese.prevalenceInterval ( ) starts before or on day of start of HighInterventionsPerformed.performed.toInterval ( )
+            where ( OverweightObese.isProblemListItem ( )
+                or OverweightObese.isHealthConcern ( )
+            )
+              and OverweightObese.isActive ( )
+              and OverweightObese.prevalenceInterval ( ) starts before or on day of start of HighInterventionsPerformed.performed.toInterval ( )
               and not ( OverweightObese.prevalenceInterval ( ) ends before day of start of HighInterventionsPerformed.performed.toInterval ( ) )
         )
   )
@@ -152,12 +156,12 @@ define "Low BMI Interventions Ordered":
 define "Low BMI Interventions Performed":
   ( [Procedure: "Follow Up for Below Normal BMI"] LowInterventionsPerformed
       where LowInterventionsPerformed.reasonCode in "Underweight"
-        and LowInterventionsPerformed.status = 'completed'
         or ( exists [ConditionProblemsHealthConcerns: "Underweight"] UnderweightDiagnosis
-            where ( UnderweightDiagnosis.isHealthConcern ( ) )
+            where ( UnderweightDiagnosis.isProblemListItem ( )
+                or UnderweightDiagnosis.isHealthConcern ( )
+            )
               and UnderweightDiagnosis.isActive ( )
               and UnderweightDiagnosis.prevalenceInterval ( ) starts before or on day of start of LowInterventionsPerformed.performed.toInterval ( )
-              and LowInterventionsPerformed.performed.toInterval ( ) during day of "Measurement Period"
               and not ( UnderweightDiagnosis.prevalenceInterval ( ) ends before day of start of LowInterventionsPerformed.performed.toInterval ( ) )
         )
   )
