@@ -1,0 +1,53 @@
+{
+  "resourceType": "Condition",
+  "id": "a5c7b367-e07d-4dc4-94c6-50a825675019",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-condition-problems-health-concerns"
+    ]
+  },
+  "clinicalStatus": {
+    "coding": [
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+        "code": "inactive",
+        "display": "inactive",
+        "userSelected": true
+      }
+    ]
+  },
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/condition-category",
+          "code": "problem-list-item",
+          "display": "Problem List Item"
+        },
+        {
+          "system": "http://snomed.info/sct",
+          "code": "439401001",
+          "display": "Diagnosis"
+        }
+      ]
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "version": "2022-03",
+        "code": "162863004",
+        "display": "Body mass index 25-29 - overweight (finding)",
+        "userSelected": true
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/2ba91529-b875-4f1a-ac6c-c23be1a32051"
+  },
+  "abatementPeriod": {
+    "start": "2023-07-25T08:00:00.000Z",
+    "end": "2025-12-30T08:15:00.000Z"
+  }
+}

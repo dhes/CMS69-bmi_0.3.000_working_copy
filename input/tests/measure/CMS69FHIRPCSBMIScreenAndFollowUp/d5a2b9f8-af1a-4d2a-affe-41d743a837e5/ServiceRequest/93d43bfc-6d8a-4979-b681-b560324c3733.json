@@ -1,0 +1,42 @@
+{
+  "resourceType": "ServiceRequest",
+  "id": "93d43bfc-6d8a-4979-b681-b560324c3733",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-servicerequest"
+    ]
+  },
+  "extension": [
+    {
+      "url": "http://qicore-qicore-doNotPerformReason",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "183932001",
+            "display": "Procedure contraindicated (situation)",
+            "userSelected": true
+          }
+        ]
+      }
+    }
+  ],
+  "status": "completed",
+  "intent": "order",
+  "doNotPerform": true,
+  "code": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "version": "2022-03",
+        "code": "182922004",
+        "display": "Dietary regime (regime/therapy)",
+        "userSelected": true
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/d5a2b9f8-af1a-4d2a-affe-41d743a837e5"
+  },
+  "authoredOn": "2025-06-15T08:00:00.000Z"
+}

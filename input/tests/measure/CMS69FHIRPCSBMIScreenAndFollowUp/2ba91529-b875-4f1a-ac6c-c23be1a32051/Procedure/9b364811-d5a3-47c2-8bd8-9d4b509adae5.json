@@ -1,0 +1,31 @@
+{
+  "resourceType": "Procedure",
+  "id": "9b364811-d5a3-47c2-8bd8-9d4b509adae5",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-procedure"
+    ]
+  },
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-recorded",
+      "valueDateTime": "2025-12-31T23:59:00.000Z"
+    }
+  ],
+  "status": "completed",
+  "code": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "version": "2022-03",
+        "code": "182922004",
+        "display": "Dietary regime (regime/therapy)",
+        "userSelected": true
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/2ba91529-b875-4f1a-ac6c-c23be1a32051"
+  },
+  "performedDateTime": "2025-12-31T23:59:00.000Z"
+}

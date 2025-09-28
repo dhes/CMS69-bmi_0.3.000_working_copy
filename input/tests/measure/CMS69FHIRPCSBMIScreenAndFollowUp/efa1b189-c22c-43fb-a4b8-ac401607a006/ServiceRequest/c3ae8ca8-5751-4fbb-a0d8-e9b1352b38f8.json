@@ -1,0 +1,67 @@
+{
+  "resourceType": "ServiceRequest",
+  "id": "c3ae8ca8-5751-4fbb-a0d8-e9b1352b38f8",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-servicenotrequested"
+    ]
+  },
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-doNotPerformReason",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "183932001",
+            "display": "Procedure contraindicated (situation)",
+            "userSelected": true
+          }
+        ]
+      }
+    },
+    {
+      "url": "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-reasonRefused",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "183932001",
+            "display": "Procedure contraindicated (situation)",
+            "userSelected": true
+          }
+        ]
+      }
+    }
+  ],
+  "status": "completed",
+  "intent": "order",
+  "doNotPerform": true,
+  "code": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "version": "2022-03",
+        "code": "103699006",
+        "display": "Patient referral to dietitian (procedure)",
+        "userSelected": true
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/efa1b189-c22c-43fb-a4b8-ac401607a006"
+  },
+  "authoredOn": "2025-01-01T00:15:00.000Z",
+  "reasonCode": [
+    {
+      "coding": [
+        {
+          "system": "http://snomed.info/sct",
+          "code": "183932001",
+          "display": "Procedure contraindicated (situation)",
+          "userSelected": true
+        }
+      ]
+    }
+  ]
+}

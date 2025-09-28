@@ -1,0 +1,57 @@
+{
+  "resourceType": "MedicationRequest",
+  "id": "d6902fd1-2c68-4395-a736-a5157901361b",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-medicationnotrequested"
+    ]
+  },
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-notDoneReason",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "183932001",
+            "display": "Procedure contraindicated (situation)",
+            "userSelected": true
+          }
+        ]
+      }
+    }
+  ],
+  "status": "completed",
+  "intent": "order",
+  "doNotPerform": true,
+  "medicationCodeableConcept": {
+    "coding": [
+      {
+        "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+        "code": "1112982",
+        "display": "phentermine hydrochloride 15 MG Disintegrating Oral Tablet",
+        "userSelected": true
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/d03007f4-577d-4482-b0bd-3d3342b00698"
+  },
+  "authoredOn": "2025-01-01T00:30:00.000Z",
+  "requester": {
+    "reference": "Practitioner/f007",
+    "display": "Patrick Pump"
+  },
+  "reasonCode": [
+    {
+      "coding": [
+        {
+          "system": "http://snomed.info/sct",
+          "code": "183932001",
+          "display": "Procedure contraindicated (situation)",
+          "userSelected": true
+        }
+      ]
+    }
+  ]
+}

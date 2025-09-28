@@ -1,0 +1,26 @@
+{
+  "resourceType": "ServiceRequest",
+  "id": "70aea0d7-7abb-48dd-baae-b582cbbb1950",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-servicerequest"
+    ]
+  },
+  "status": "active",
+  "intent": "order",
+  "code": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "version": "2022-03",
+        "code": "385763009",
+        "display": "Hospice care (regime/therapy)",
+        "userSelected": true
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/2ee46b6b-9a32-45b3-a9c5-a9a74c3b54a5"
+  },
+  "authoredOn": "2025-01-01T00:30:00.000Z"
+}

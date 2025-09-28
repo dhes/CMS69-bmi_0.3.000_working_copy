@@ -1,0 +1,42 @@
+{
+  "resourceType": "ServiceRequest",
+  "id": "2c6a9a5e-eac9-45fc-8ba4-a6fc0159ee4f",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-servicenotrequested"
+    ]
+  },
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-doNotPerformReason",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "407563006",
+            "display": "Treatment not tolerated (situation)",
+            "userSelected": true
+          }
+        ]
+      }
+    }
+  ],
+  "status": "completed",
+  "intent": "order",
+  "doNotPerform": true,
+  "code": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "version": "2022-03",
+        "code": "386292004",
+        "display": "Exercise promotion: stretching (procedure)",
+        "userSelected": true
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/db66690b-01a3-4981-899b-4d0b93f7b0ab"
+  },
+  "authoredOn": "2025-01-01T08:01:00.000Z"
+}

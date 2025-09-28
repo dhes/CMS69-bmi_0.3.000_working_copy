@@ -1,0 +1,41 @@
+{
+  "resourceType": "MedicationRequest",
+  "id": "374e752f-c90c-4551-9d0b-df1cc9df437e",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-medicationrequest"
+    ]
+  },
+  "status": "active",
+  "intent": "order",
+  "medicationCodeableConcept": {
+    "coding": [
+      {
+        "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+        "code": "1928948",
+        "display": "dronabinol 5 MG/ML Oral Solution",
+        "userSelected": true
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/6431b9fc-5b4b-4d8c-bad8-e3cf2109660d"
+  },
+  "authoredOn": "2025-12-31T23:59:00.000Z",
+  "requester": {
+    "reference": "Practitioner/f007",
+    "display": "Patrick Pump"
+  },
+  "reasonCode": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/sid/icd-10-cm",
+          "code": "R63.6",
+          "display": "Underweight",
+          "userSelected": true
+        }
+      ]
+    }
+  ]
+}

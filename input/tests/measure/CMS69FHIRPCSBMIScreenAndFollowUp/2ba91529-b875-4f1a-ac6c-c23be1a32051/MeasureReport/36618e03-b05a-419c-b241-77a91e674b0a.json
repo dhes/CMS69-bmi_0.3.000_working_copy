@@ -1,0 +1,144 @@
+{
+  "resourceType": "MeasureReport",
+  "id": "36618e03-b05a-419c-b241-77a91e674b0a",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/test-case-cqfm"
+    ]
+  },
+  "contained": [
+    {
+      "resourceType": "Parameters",
+      "id": "f9cef0c0-b7ef-4a7b-93ce-d00541feb449-parameters",
+      "parameter": [
+        {
+          "name": "subject",
+          "valueString": "a0aacdbc-4954-48af-aa88-361ea7e32736"
+        }
+      ]
+    }
+  ],
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/cqf-inputParameters",
+      "valueReference": {
+        "reference": "#f9cef0c0-b7ef-4a7b-93ce-d00541feb449-parameters"
+      }
+    },
+    {
+      "url": "http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/cqfm-testCaseDescription",
+      "valueMarkdown": "Enc last day of MP @23:30-23:59, BMI 30 kg/m2 during enc, Obese dx 7/25/23, inactive 12/30, intervention after dx inactive, expected to fail the numer "
+    }
+  ],
+  "modifierExtension": [
+    {
+      "url": "http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/cqfm-isTestCase",
+      "valueBoolean": true
+    }
+  ],
+  "status": "complete",
+  "type": "individual",
+  "measure": "https://madie.cms.gov/Measure/CMS69FHIRPCSBMIScreenAndFollowUp",
+  "period": {
+    "start": "2025-01-01",
+    "end": "2025-12-31"
+  },
+  "group": [
+    {
+      "id": "Group_1",
+      "population": [
+        {
+          "id": "InitialPopulation_1",
+          "code": {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                "code": "initial-population",
+                "display": "Initial Population"
+              }
+            ]
+          },
+          "count": 1
+        },
+        {
+          "id": "Denominator_1",
+          "code": {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                "code": "denominator",
+                "display": "Denominator"
+              }
+            ]
+          },
+          "count": 1
+        },
+        {
+          "id": "DenominatorExclusion_1",
+          "code": {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                "code": "denominator-exclusion",
+                "display": "Denominator Exclusion"
+              }
+            ]
+          },
+          "count": 0
+        },
+        {
+          "id": "Numerator_1",
+          "code": {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                "code": "numerator",
+                "display": "Numerator"
+              }
+            ]
+          },
+          "count": 0
+        },
+        {
+          "id": "DenominatorException_1",
+          "code": {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                "code": "denominator-exception",
+                "display": "Denominator Exception"
+              }
+            ]
+          },
+          "count": 0
+        }
+      ],
+      "measureScore": {
+        "value": 1
+      }
+    }
+  ],
+  "evaluatedResource": [
+    {
+      "reference": "Patient/2ba91529-b875-4f1a-ac6c-c23be1a32051"
+    },
+    {
+      "reference": "Encounter/2b4e2bd2-9940-4df5-b98c-20cae55fce85"
+    },
+    {
+      "reference": "Observation/797a918d-81ad-46b8-ac24-de5cd8914be1"
+    },
+    {
+      "reference": "Procedure/9b364811-d5a3-47c2-8bd8-9d4b509adae5"
+    },
+    {
+      "reference": "Condition/a5c7b367-e07d-4dc4-94c6-50a825675019"
+    },
+    {
+      "reference": "Coverage/1a01dc72-27a9-4b17-a8d4-40e0a46490f7"
+    },
+    {
+      "reference": "Organization/7398cc7e-71e9-4e84-8226-78f73dc09ce8"
+    }
+  ]
+}

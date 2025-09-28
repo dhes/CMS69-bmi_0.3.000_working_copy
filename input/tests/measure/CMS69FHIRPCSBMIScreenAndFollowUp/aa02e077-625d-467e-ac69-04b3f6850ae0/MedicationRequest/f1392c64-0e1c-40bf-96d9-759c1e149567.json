@@ -1,0 +1,42 @@
+{
+  "resourceType": "MedicationRequest",
+  "id": "f1392c64-0e1c-40bf-96d9-759c1e149567",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-mednotrequested"
+    ]
+  },
+  "status": "completed",
+  "intent": "order",
+  "doNotPerform": true,
+  "medicationCodeableConcept": {
+    "coding": [
+      {
+        "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+        "code": "1112982",
+        "display": "phentermine hydrochloride 15 MG Disintegrating Oral Tablet",
+        "userSelected": true
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/aa02e077-625d-467e-ac69-04b3f6850ae0"
+  },
+  "authoredOn": "2025-01-01T08:10:00.000Z",
+  "requester": {
+    "reference": "Practitioner/f007",
+    "display": "Patrick Pump"
+  },
+  "reasonCode": [
+    {
+      "coding": [
+        {
+          "system": "http://snomed.info/sct",
+          "code": "62014003",
+          "display": "Adverse reaction caused by drug (disorder)",
+          "userSelected": true
+        }
+      ]
+    }
+  ]
+}

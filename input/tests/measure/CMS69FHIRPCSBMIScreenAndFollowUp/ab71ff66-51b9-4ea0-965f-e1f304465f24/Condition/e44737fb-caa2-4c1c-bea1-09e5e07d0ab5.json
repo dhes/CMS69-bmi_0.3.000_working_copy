@@ -1,0 +1,32 @@
+{
+  "resourceType": "Condition",
+  "id": "e44737fb-caa2-4c1c-bea1-09e5e07d0ab5",
+  "clinicalStatus": {
+    "coding": [
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+        "code": "inactive",
+        "display": "inActive",
+        "userSelected": true
+      }
+    ]
+  },
+  "code": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "version": "2022-03",
+        "code": "248342006",
+        "display": "Underweight (finding)",
+        "userSelected": true
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/ab71ff66-51b9-4ea0-965f-e1f304465f24"
+  },
+  "abatementPeriod": {
+    "start": "2023-01-01T08:00:00.000Z",
+    "end": "2025-08-15T23:59:00.000Z"
+  }
+}

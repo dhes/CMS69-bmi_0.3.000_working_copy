@@ -1,4 +1,4 @@
-library Hospice version '6.15.001'
+library Hospice version '6.15.002'
 
 using QICore version '6.0.0'
 
@@ -20,37 +20,71 @@ code "Discharge to home for hospice care (procedure)": '428361000124107' from "S
 code "Hospice care [Minimum Data Set]": '45755-6' from "LOINC" display 'Hospice care [Minimum Data Set]'
 code "Yes (qualifier value)": '373066001' from "SNOMEDCT" display 'Yes (qualifier value)'
 
-parameter "Measurement Period" Interval<DateTime> // default Interval[@2026-01-01T00:00:00.0, @2026-12-31T23:59:59.999]
+parameter "Measurement Period" Interval<DateTime> // default Interval[@2025-01-01T00:00:00Z,@2025-12-31T23:59:59Z]
 
 context Patient
 
+define "Real Time Mode":
+  Coalesce(year from start of "Measurement Period" = 1900, false)
+
 define "Has Hospice Services":
-  exists ((([Encounter: "Encounter Inpatient"]).isEncounterPerformed()) InpatientEncounter
+  exists "Inpatient Encounter"
+    or exists "Encounter Hospice"
+    or exists "Hospice Assessment"
+    or exists "Hospice Order"
+    or exists "Hospice Performed"
+    or exists "Hospice Problem Diagnosis"
+    or exists "Hospice Encounter Diagnosis"
+
+define "Inpatient Encounter": 
+  ((([Encounter: "Encounter Inpatient"]).isEncounterPerformed()) InpatientEncounter
       where (InpatientEncounter.hospitalization.dischargeDisposition ~ "Discharge to home for hospice care (procedure)"
           or InpatientEncounter.hospitalization.dischargeDisposition ~ "Discharge to healthcare facility for hospice care (procedure)"
       )
-        and InpatientEncounter.period.toInterval() ends during day of "Measurement Period"
+        and if "Real Time Mode" then
+            true
+          else InpatientEncounter.period.toInterval() ends during day of "Measurement Period"
   )
-    or exists ((([Encounter: "Hospice Encounter"]).isEncounterPerformed()) HospiceEncounter
-        where HospiceEncounter.period.toInterval() overlaps day of "Measurement Period"
+
+define "Encounter Hospice":
+  ((([Encounter: "Hospice Encounter"]).isEncounterPerformed()) HospiceEncounter
+        where  if "Real Time Mode" then
+            true
+          else HospiceEncounter.period.toInterval() overlaps day of "Measurement Period"
     )
-    or exists ((([ObservationScreeningAssessment: "Hospice care [Minimum Data Set]"]).isAssessmentPerformed()) HospiceAssessment
+
+define "Hospice Assessment":
+  ((([ObservationScreeningAssessment: "Hospice care [Minimum Data Set]"]).isAssessmentPerformed()) HospiceAssessment
         // where HospiceAssessment.value ~ "Yes (qualifier value)"
-          where HospiceAssessment.effective.toInterval() overlaps day of "Measurement Period"
+          where  if "Real Time Mode" then
+            true
+          else HospiceAssessment.effective.toInterval() overlaps day of "Measurement Period"
     )
-    or exists ((([ServiceRequest: "Hospice Care Ambulatory"]).isInterventionOrder()) HospiceOrder
-        where HospiceOrder.authoredOn.toInterval() during day of "Measurement Period"
+
+define "Hospice Order":
+  ((([ServiceRequest: "Hospice Care Ambulatory"]).isInterventionOrder()) HospiceOrder
+        where  if "Real Time Mode" then
+            true
+          else HospiceOrder.authoredOn.toInterval() during day of "Measurement Period"
     )
-    or exists ((([Procedure: "Hospice Care Ambulatory"]).isInterventionPerformed()) HospicePerformed
-        where HospicePerformed.performed.toInterval() overlaps day of "Measurement Period"
+
+define "Hospice Performed":
+  ((([Procedure: "Hospice Care Ambulatory"]).isInterventionPerformed()) HospicePerformed
+        where  if "Real Time Mode" then
+            true
+          else HospicePerformed.performed.toInterval() overlaps day of "Measurement Period"
     )
-    or exists ((([ConditionProblemsHealthConcerns: "Hospice Diagnosis"] P)
-        union ([ConditionEncounterDiagnosis: "Hospice Diagnosis"] E)) HospiceCareDiagnosis
-        where HospiceCareDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
+
+define "Hospice Problem Diagnosis": 
+  (([ConditionProblemsHealthConcerns: "Hospice Diagnosis"]) HospiceProblemDiagnosis
+        where  if "Real Time Mode" then
+            true
+          else HospiceProblemDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
     )
-    // or exists (([ConditionProblemsHealthConcerns: "Hospice Diagnosis"]) HospiceProblemiagnosis
-    //     where HospiceProblemiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
-    // )
-    // or exists (([ConditionEncounterDiagnosis: "Hospice Diagnosis"]) HospiceEncounteriagnosis
-    //     where HospiceEncounteriagnosis.prevalenceInterval() overlaps day of "Measurement Period"
-    // )
+
+define "Hospice Encounter Diagnosis":
+  (([ConditionEncounterDiagnosis: "Hospice Diagnosis"]) HospiceEncounterDiagnosis
+        where  if "Real Time Mode" then
+            true
+          else HospiceEncounterDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
+    )

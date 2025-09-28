@@ -1,0 +1,50 @@
+{
+  "resourceType": "Condition",
+  "id": "451a6fa3-4603-43f9-8aff-f1561c5e2bfb",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-condition-problems-health-concerns"
+    ]
+  },
+  "clinicalStatus": {
+    "coding": [
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+        "code": "active",
+        "display": "active",
+        "userSelected": true
+      }
+    ]
+  },
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/condition-category",
+          "code": "problem-list-item",
+          "display": "Problem List Item"
+        },
+        {
+          "system": "http://snomed.info/sct",
+          "code": "441874000",
+          "display": "Diagnosis"
+        }
+      ]
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "version": "2022-03",
+        "code": "441874000",
+        "display": "Seen by palliative care service (finding)",
+        "userSelected": true
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/2fb270c9-1dea-4c03-a430-287dad3c8547"
+  },
+  "onsetDateTime": "2025-01-01T00:30:00.000Z"
+}

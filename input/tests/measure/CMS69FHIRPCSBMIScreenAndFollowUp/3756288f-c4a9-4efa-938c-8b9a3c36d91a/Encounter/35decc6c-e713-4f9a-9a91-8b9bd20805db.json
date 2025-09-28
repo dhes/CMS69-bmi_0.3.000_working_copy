@@ -1,0 +1,35 @@
+{
+  "resourceType": "Encounter",
+  "id": "35decc6c-e713-4f9a-9a91-8b9bd20805db",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-encounter"
+    ]
+  },
+  "status": "finished",
+  "class": {
+    "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+    "code": "AMB",
+    "display": "ambulatory"
+  },
+  "type": [
+    {
+      "coding": [
+        {
+          "system": "http://snomed.info/sct",
+          "version": "2022-03",
+          "code": "10197000",
+          "display": "Psychiatric interview and evaluation (procedure)",
+          "userSelected": true
+        }
+      ]
+    }
+  ],
+  "subject": {
+    "reference": "Patient/3756288f-c4a9-4efa-938c-8b9a3c36d91a"
+  },
+  "period": {
+    "start": "2025-01-01T00:00:00.000Z",
+    "end": "2025-01-01T00:30:00.000Z"
+  }
+}

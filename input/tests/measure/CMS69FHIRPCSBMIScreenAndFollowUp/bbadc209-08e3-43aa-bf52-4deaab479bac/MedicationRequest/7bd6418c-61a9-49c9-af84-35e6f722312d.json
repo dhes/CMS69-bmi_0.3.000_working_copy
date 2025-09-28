@@ -1,0 +1,41 @@
+{
+  "resourceType": "MedicationRequest",
+  "id": "7bd6418c-61a9-49c9-af84-35e6f722312d",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-medicationnotrequested"
+    ]
+  },
+  "status": "completed",
+  "intent": "order",
+  "doNotPerform": true,
+  "medicationCodeableConcept": {
+    "coding": [
+      {
+        "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+        "code": "1112987",
+        "display": "phentermine hydrochloride 30 MG Disintegrating Oral Tablet"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/bbadc209-08e3-43aa-bf52-4deaab479bac"
+  },
+  "authoredOn": "2025-01-01T00:30:00.000Z",
+  "requester": {
+    "reference": "Practitioner/f007",
+    "display": "Patrick Pump"
+  },
+  "reasonCode": [
+    {
+      "coding": [
+        {
+          "system": "http://snomed.info/sct",
+          "code": "183932001",
+          "display": "Procedure contraindicated (situation)",
+          "userSelected": true
+        }
+      ]
+    }
+  ]
+}

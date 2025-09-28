@@ -1,0 +1,41 @@
+{
+  "resourceType": "MedicationRequest",
+  "id": "28fd4b60-f43f-4d42-96e2-6583164c7757",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-medicationrequest"
+    ]
+  },
+  "status": "active",
+  "intent": "order",
+  "medicationCodeableConcept": {
+    "coding": [
+      {
+        "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+        "code": "1112982",
+        "display": "phentermine hydrochloride 15 MG Disintegrating Oral Tablet",
+        "userSelected": true
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/1dcd623a-16f5-4123-a80b-dbe383eb37f1"
+  },
+  "authoredOn": "2025-01-01T00:30:00.000Z",
+  "requester": {
+    "reference": "Practitioner/f007",
+    "display": "Patrick Pump"
+  },
+  "reasonCode": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/sid/icd-10-cm",
+          "code": "E66.01",
+          "display": "Morbid (severe) obesity due to excess calories",
+          "userSelected": true
+        }
+      ]
+    }
+  ]
+}

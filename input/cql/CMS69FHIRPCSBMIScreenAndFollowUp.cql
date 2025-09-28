@@ -3,7 +3,7 @@ library CMS69FHIRPCSBMIScreenAndFollowUp version '0.3.001'
 using QICore version '6.0.0'
 
 include FHIRHelpers version '4.4.000' called FHIRHelpers
-include Hospice version '6.15.001' called Hospice
+include Hospice version '6.15.002' called Hospice
 include PalliativeCare version '1.15.001' called PalliativeCare
 include QICoreCommon version '4.0.000' called QICoreCommon
 include SupplementalDataElements version '5.1.000' called SDE
@@ -34,9 +34,23 @@ parameter "Measurement Period" Interval<DateTime> // default Interval[@2026-01-0
 
 context Patient
 
+define "Real Time Mode":
+  Coalesce(year from start of "Measurement Period" = 1900, false)
+
+define MeasurementPeriod: "Measurement Period"
+
+define "Date Of Birth": date from Patient.birthDate
+
+define "Age In Years": AgeInYears()
+
+define "Age In Years At Start Of Measurement Period": AgeInYearsAt(date from start of "Measurement Period")
+
 define "Initial Population":
-  exists "Qualifying Encounter During Day Of Measurement Period" QualifyingEncounter
-    where "AgeInYearsAt"(date from start of QualifyingEncounter.period) >= 18
+  if "Real Time Mode" then
+    AgeInYears() >= 18
+  else
+    exists "Qualifying Encounter During Day Of Measurement Period" QualifyingEncounter
+      where "AgeInYearsAt"(date from start of QualifyingEncounter.period) >= 18
 
 define "Denominator":
   "Initial Population"
@@ -44,7 +58,7 @@ define "Denominator":
 define "Denominator Exclusions": 
   Hospice."Has Hospice Services"
     or PalliativeCare."Has Palliative Care in the Measurement Period"
-    or exists "Is Pregnant During Day Of Measurement Period"
+    or "Is Pregnant During Day Of Measurement Period"
 
 define "Numerator": 
   exists "High BMI And Follow Up Provided"
@@ -59,17 +73,20 @@ define "BMI During Measurement Period":
   [USCoreBMIProfile] BMI
     where BMI.value > 0 'kg/m2'
       and BMI.status in { 'final', 'amended', 'corrected' }
-      and BMI.effective.toInterval ( ) during day of "Measurement Period"
+      and if "Real Time Mode" then
+        BMI.effective.toInterval() during day of Interval[DateTime(year from Today(), 1, 1, 0, 0, 0, 0, 0), DateTime(year from Today(), 12, 31, 23, 59, 59,999, 0)]
+      else
+        BMI.effective.toInterval() during day of "Measurement Period"
 
 define "Documented Low BMI During Measurement Period":
   "BMI During Measurement Period" BMI
-    where BMI.effective.toInterval ( ) during day of "Measurement Period"
-      and BMI.value < 18.5 'kg/m2'
+    // where BMI.effective.toInterval ( ) during day of "Measurement Period"
+      where BMI.value < 18.5 'kg/m2'
 
 define "Documented High BMI During Measurement Period":
   "BMI During Measurement Period" BMI
-    where BMI.effective.toInterval ( ) during day of "Measurement Period"
-      and BMI.value >= 25 'kg/m2'
+    // where BMI.effective.toInterval ( ) during day of "Measurement Period"
+      where BMI.value >= 25 'kg/m2'
 
 define "Has Normal BMI":
   exists ( "BMI During Measurement Period" BMI
@@ -172,24 +189,24 @@ define "Medical Reason For Not Documenting A Follow Up Plan For Low Or High BMI"
           and NoBMIFollowUp.reasonCode in "Medical Reason"
     )
 
-define "Is Pregnant During Day Of Measurement Period":
-  ( [ConditionProblemsHealthConcerns: "Pregnancy or Other Related Diagnoses"] P
-    union [ConditionEncounterDiagnosis: "Pregnancy or Other Related Diagnoses"] E) PregnancyDiagnosis
-    with "Qualifying Encounter During Day Of Measurement Period" QualifyingEncounter
-      such that PregnancyDiagnosis.clinicalStatus ~ QICoreCommon."active"
-        and PregnancyDiagnosis.prevalenceInterval ( ) overlaps day of "Measurement Period"
-
 // define "Is Pregnant During Day Of Measurement Period":
-//   exists ( [ConditionProblemsHealthConcerns: "Pregnancy or Other Related Diagnoses"] PregnancyProblemDiagnosis
+//   ( [ConditionProblemsHealthConcerns: "Pregnancy or Other Related Diagnoses"] P
+//     union [ConditionEncounterDiagnosis: "Pregnancy or Other Related Diagnoses"] E) PregnancyDiagnosis
 //     with "Qualifying Encounter During Day Of Measurement Period" QualifyingEncounter
-//       such that PregnancyProblemDiagnosis.clinicalStatus ~ QICoreCommon."active"
-//         and PregnancyProblemDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
-//   )
-//   or exists ( [ConditionEncounterDiagnosis: "Pregnancy or Other Related Diagnoses"] PregnancyEncounterDiagnosis
-//     with "Qualifying Encounter During Day Of Measurement Period" QualifyingEncounter
-//       such that PregnancyEncounterDiagnosis.clinicalStatus ~ QICoreCommon."active"
-//         and PregnancyEncounterDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
-//   )
+//       such that PregnancyDiagnosis.clinicalStatus ~ QICoreCommon."active"
+//         and PregnancyDiagnosis.prevalenceInterval ( ) overlaps day of "Measurement Period"
+
+define "Is Pregnant During Day Of Measurement Period":
+  exists ( [ConditionProblemsHealthConcerns: "Pregnancy or Other Related Diagnoses"] PregnancyProblemDiagnosis
+    with "Qualifying Encounter During Day Of Measurement Period" QualifyingEncounter
+      such that PregnancyProblemDiagnosis.clinicalStatus ~ QICoreCommon."active"
+        and PregnancyProblemDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
+  )
+  or exists ( [ConditionEncounterDiagnosis: "Pregnancy or Other Related Diagnoses"] PregnancyEncounterDiagnosis
+    with "Qualifying Encounter During Day Of Measurement Period" QualifyingEncounter
+      such that PregnancyEncounterDiagnosis.clinicalStatus ~ QICoreCommon."active"
+        and PregnancyEncounterDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
+  )
 
 define "Qualifying Encounter During Day Of Measurement Period":
   [Encounter: type in "Encounter to Evaluate BMI"] BMIEncounter
@@ -208,3 +225,14 @@ define "SDE Race":
 
 define "SDE Sex":
   SDE."SDE Sex"
+
+define "Patient Score":
+  case
+    when not (
+      Coalesce("Denominator", false) and (
+        not Coalesce("Denominator Exclusions", false) or 
+            Coalesce("Denominator Exceptions", false))
+    ) then null
+    when Coalesce("Numerator", false) then 1
+    else 0
+  end

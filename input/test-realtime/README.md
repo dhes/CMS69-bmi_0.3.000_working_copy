@@ -1,0 +1,1 @@
+These test cases -- derived from the 2026 batch -- are presently in input/tests/measure/CMS69FHIRPCSBMIScreenAndFollowUp. 
