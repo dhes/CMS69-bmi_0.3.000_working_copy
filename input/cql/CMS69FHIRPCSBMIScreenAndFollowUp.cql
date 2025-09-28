@@ -137,14 +137,15 @@ define "Medical Reason Or Patient Reason For Not Performing BMI Exam":
 
 define "Low BMI Interventions Ordered":
   ( ( [ServiceRequest: "Follow Up for Below Normal BMI"]
-      union [ServiceRequest: "Referrals Where Weight Assessment May Occur"]
+    union [ServiceRequest: "Referrals Where Weight Assessment May Occur"]
       union [MedicationRequest: "Medications for Below Normal BMI"] ) LowInterventionsOrdered
       where LowInterventionsOrdered.reasonCode in "Underweight"
         or ( exists [ConditionProblemsHealthConcerns: "Underweight"] UnderweightDiagnosis
-            where ( UnderweightDiagnosis.isHealthConcern ( ) )
+            where ( UnderweightDiagnosis.isProblemListItem ( )
+                or UnderweightDiagnosis.isHealthConcern ( )
+            )
               and UnderweightDiagnosis.isActive ( )
               and UnderweightDiagnosis.prevalenceInterval ( ) starts before or on day of LowInterventionsOrdered.authoredOn
-              and LowInterventionsOrdered.authoredOn during day of "Measurement Period"
         )
   )
 
