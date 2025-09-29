@@ -101,7 +101,10 @@ define "High BMI And Follow Up Provided":
   "Documented High BMI During Measurement Period" HighBMI
     with ( "High BMI Interventions Ordered"
       union "High BMI Interventions Performed" ) HighBMIInterventions
-      such that Coalesce(HighBMIInterventions.performed.toInterval(), HighBMIInterventions.authoredOn.toInterval()) starts during day of "Measurement Period"
+      such that if "Real Time Mode" then
+        Coalesce(HighBMIInterventions.performed.toInterval(), HighBMIInterventions.authoredOn.toInterval()) starts during day of Interval[DateTime(year from Today(), 1, 1, 0, 0, 0, 0, 0), DateTime(year from Today(), 12, 31, 23, 59, 59, 999, 0)]
+      else
+        Coalesce(HighBMIInterventions.performed.toInterval(), HighBMIInterventions.authoredOn.toInterval()) starts during day of "Measurement Period"
 
 define "High BMI Interventions Ordered":
   ( ( [ServiceRequest: "Follow Up for Above Normal BMI"]
@@ -170,7 +173,10 @@ define "Low BMI And Follow Up Provided":
   ( "Documented Low BMI During Measurement Period" LowBMI
       with ( "Low BMI Interventions Ordered"
         union "Low BMI Interventions Performed" ) LowBMIInterventions
-        such that Coalesce(LowBMIInterventions.performed.toInterval(), LowBMIInterventions.authoredOn.toInterval()) starts during day of "Measurement Period"
+        such that if "Real Time Mode" then
+          Coalesce(LowBMIInterventions.performed.toInterval(), LowBMIInterventions.authoredOn.toInterval()) starts during day of Interval[DateTime(year from Today(), 1, 1, 0, 0, 0, 0, 0), DateTime(year from Today(), 12, 31, 23, 59, 59, 999, 0)]
+        else
+          Coalesce(LowBMIInterventions.performed.toInterval(), LowBMIInterventions.authoredOn.toInterval()) starts during day of "Measurement Period"
   )
 
 define "Medical Reason For Not Documenting A Follow Up Plan For Low Or High BMI":
@@ -205,17 +211,26 @@ define "Is Pregnant During Day Of Measurement Period":
   exists ( [ConditionProblemsHealthConcerns: "Pregnancy or Other Related Diagnoses"] PregnancyProblemDiagnosis
     with "Qualifying Encounter During Day Of Measurement Period" QualifyingEncounter
       such that PregnancyProblemDiagnosis.clinicalStatus ~ QICoreCommon."active"
-        and PregnancyProblemDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
+        and if "Real Time Mode" then
+          PregnancyProblemDiagnosis.prevalenceInterval() overlaps day of Interval[DateTime(year from Today(), 1, 1, 0, 0, 0, 0, 0), DateTime(year from Today(), 12, 31, 23, 59, 59, 999, 0)]
+        else
+          PregnancyProblemDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
   )
   or exists ( [ConditionEncounterDiagnosis: "Pregnancy or Other Related Diagnoses"] PregnancyEncounterDiagnosis
     with "Qualifying Encounter During Day Of Measurement Period" QualifyingEncounter
       such that PregnancyEncounterDiagnosis.clinicalStatus ~ QICoreCommon."active"
-        and PregnancyEncounterDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
+        and if "Real Time Mode" then
+          PregnancyEncounterDiagnosis.prevalenceInterval() overlaps day of Interval[DateTime(year from Today(), 1, 1, 0, 0, 0, 0, 0), DateTime(year from Today(), 12, 31, 23, 59, 59, 999, 0)]
+        else
+          PregnancyEncounterDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
   )
 
 define "Qualifying Encounter During Day Of Measurement Period":
   [Encounter: type in "Encounter to Evaluate BMI"] BMIEncounter
-    where BMIEncounter.period during day of "Measurement Period"
+    where if "Real Time Mode" then
+      BMIEncounter.period during day of Interval[DateTime(year from Today(), 1, 1, 0, 0, 0, 0, 0), DateTime(year from Today(), 12, 31, 23, 59, 59, 999, 0)]
+    else
+      BMIEncounter.period during day of "Measurement Period"
       and BMIEncounter.class !~ "virtual"
       and BMIEncounter.status = 'finished'
 
@@ -231,13 +246,38 @@ define "SDE Race":
 define "SDE Sex":
   SDE."SDE Sex"
 
+// Experimental
+define "eCQM Initial Population Exclusion Reason":
+  if "Real Time Mode" then
+    null
+  else if AgeInYearsAt(date from start of "Measurement Period") < 18 then
+    'Will not appear in quality measure score: Under 18 years old'
+  else if not exists "Qualifying Encounter During Day Of Measurement Period" then
+    'Will not appear in quality measure score: No qualifying encounters for BMI evaluation'
+  else if Hospice."Has Hospice Services" then
+    'Will not appear in quality measure score: Has Hospice Services'
+  else if PalliativeCare."Has Palliative Care in the Measurement Period" then
+    'Will not appear in quality measure score: Has Palliative Care'
+  else if "Is Pregnant During Day Of Measurement Period" then
+    'Will not appear in quality measure score: Pregnancy exclusion'
+  else
+    null  // Patient IS included in measure score
+
 define "Patient Score":
   case
     when not (
-      Coalesce("Denominator", false) and (
-        not Coalesce("Denominator Exclusions", false) or 
-            Coalesce("Denominator Exceptions", false))
+      Coalesce("Denominator", false) and 
+      not Coalesce("Denominator Exclusions", false) and 
+      not Coalesce("Denominator Exceptions", false)
     ) then null
     when Coalesce("Numerator", false) then 1
     else 0
   end
+
+// Experimental
+define "Patient Score is 0":
+  if "Patient Score" = 0 then 'Document BMI and provide appropriate follow-up if needed' else false
+
+// Experimental
+define "All Goals Met":
+  if "Patient Score" = 1 then 'All BMI Screening and Follow-up goals are met' else false
