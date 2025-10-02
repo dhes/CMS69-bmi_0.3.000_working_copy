@@ -291,7 +291,27 @@ define "High BMI And Follow Up Not Provided":
   not exists "High BMI Interventions Ordered"
 
 // Experimental
-define "High BMI Follow Up Action":
+define "High BMI Follow Up Banner":
   if ("Real Time Mode" and "High BMI And Follow Up Not Provided") then 
   'Action Required: Provide follow-up for high BMI. Consider counseling, pharmacotherapy or referral. Document intervention in patient record.'
+  else null
+
+// Experimental
+define "Needs Screening":
+  Included and 
+  not exists "BMI During Measurement Period"
+
+define "Needs Screening Banner":
+  if "Needs Screening" then 'Action Needed: Assess BMI. Document BMI measurement in patient record. ' else null
+
+// Experimental
+define "Low BMI And Follow Up Not Provided":
+  "Included" and
+  exists "Documented Low BMI During Measurement Period" and
+  not exists "Low BMI Interventions Ordered"
+
+// Experimental
+define "Low BMI Follow Up Banner":
+  if ("Real Time Mode" and "Low BMI And Follow Up Not Provided") then 
+  'Action Required: Provide follow-up for low BMI. Consider counseling, pharmacotherapy or referral. Document intervention in patient record.'
   else null
