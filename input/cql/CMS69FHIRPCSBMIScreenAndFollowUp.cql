@@ -1,10 +1,10 @@
-library CMS69FHIRPCSBMIScreenAndFollowUp version '0.3.001'
+library CMS69FHIRPCSBMIScreenAndFollowUp version '0.3.002'
 
 using QICore version '6.0.0'
 
 include FHIRHelpers version '4.4.000' called FHIRHelpers
 include Hospice version '6.15.002' called Hospice
-include PalliativeCare version '1.15.001' called PalliativeCare
+include PalliativeCare version '1.15.002' called PalliativeCare
 include QICoreCommon version '4.0.000' called QICoreCommon
 include SupplementalDataElements version '5.1.000' called SDE
 
@@ -30,7 +30,7 @@ code "Encounter for palliative care": 'Z51.5' from "ICD10CM" display 'Encounter 
 code "Functional Assessment of Chronic Illness Therapy - Palliative Care Questionnaire (FACIT-Pal)": '71007-9' from "LOINC" display 'Functional Assessment of Chronic Illness Therapy - Palliative Care Questionnaire (FACIT-Pal)'
 code "virtual": 'VR' from "ActCode" display 'virtual'
 
-parameter "Measurement Period" Interval<DateTime> // default Interval[@2026-01-01T00:00:00.0, @2026-12-31T23:59:59.999]
+parameter "Measurement Period" Interval<DateTime> // default Interval[DateTime(2025,1,1,0,0,0,0,0), DateTime(2025,12,31,23,59,59,999,0)]
 
 context Patient
 
@@ -265,12 +265,8 @@ define "eCQM Initial Population Exclusion Reason":
 
 define "Patient Score":
   case
-    when not (
-      Coalesce("Denominator", false) and 
-      not Coalesce("Denominator Exclusions", false) and 
-      not Coalesce("Denominator Exceptions", false)
-    ) then null
-    when Coalesce("Numerator", false) then 1
+    when not "Included" then null
+    when "Numerator" then 1
     else 0
   end
 
@@ -281,3 +277,21 @@ define "Patient Score is 0":
 // Experimental
 define "All Goals Met":
   if "Patient Score" = 1 then 'All BMI Screening and Follow-up goals are met' else false
+
+// Experimental 
+define "Included":
+  "Denominator" and 
+    not "Denominator Exclusions" and 
+    not "Denominator Exceptions"
+
+// Experimental
+define "High BMI And Follow Up Not Provided":
+  "Included" and
+  exists "Documented High BMI During Measurement Period" and
+  not exists "High BMI Interventions Ordered"
+
+// Experimental
+define "High BMI Follow Up Action":
+  if ("Real Time Mode" and "High BMI And Follow Up Not Provided") then 
+  'Action Required: Provide follow-up for high BMI. Consider counseling, pharmacotherapy or referral. Document intervention in patient record.'
+  else null

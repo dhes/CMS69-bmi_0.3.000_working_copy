@@ -1,4 +1,4 @@
-library PalliativeCare version '1.15.001'
+library PalliativeCare version '1.15.002'
 
 using QICore version '6.0.0'
 
@@ -18,23 +18,42 @@ parameter "Measurement Period" Interval<DateTime> // default Interval[@2026-01-0
 
 context Patient
 
+define "Real Time Mode":
+  Coalesce(year from start of "Measurement Period" = 1900, false)
+
+define "Palliative Care Assessment":
+  (([ObservationScreeningAssessment: "Functional Assessment of Chronic Illness Therapy - Palliative Care Questionnaire (FACIT-Pal)"]).isAssessmentPerformed()) PalliativeAssessment
+    where if "Real Time Mode" then
+        true
+      else PalliativeAssessment.effective.toInterval() overlaps day of "Measurement Period"
+
+define "Palliative Care Problem Diagnosis":
+  ([ConditionProblemsHealthConcerns: "Palliative Care Diagnosis"]) PalliativeProblemDiagnosis
+    where if "Real Time Mode" then
+        true
+      else PalliativeProblemDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
+
+define "Palliative Care Encounter Diagnosis":
+  ([ConditionEncounterDiagnosis: "Palliative Care Diagnosis"]) PalliativeEncounterDiagnosis
+    where if "Real Time Mode" then
+        true
+      else PalliativeEncounterDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
+
+define "Palliative Care Encounters":
+  (([Encounter: "Palliative Care Encounter"]).isEncounterPerformed()) PalliativeEncounter
+    where if "Real Time Mode" then
+        true
+      else PalliativeEncounter.period.toInterval() overlaps day of "Measurement Period"
+
+define "Palliative Care Interventions":
+  (([Procedure: "Palliative Care Intervention"]).isInterventionPerformed()) PalliativeIntervention
+    where if "Real Time Mode" then
+        true
+      else PalliativeIntervention.performed.toInterval() overlaps day of "Measurement Period"
+
 define "Has Palliative Care in the Measurement Period":
-  exists ((([ObservationScreeningAssessment: "Functional Assessment of Chronic Illness Therapy - Palliative Care Questionnaire (FACIT-Pal)"]).isAssessmentPerformed()) PalliativeAssessment
-      where PalliativeAssessment.effective.toInterval() overlaps day of "Measurement Period"
-  )
-    or exists (([ConditionProblemsHealthConcerns: "Palliative Care Diagnosis"] P
-    union [ConditionEncounterDiagnosis: "Palliative Care Diagnosis"] E) PalliativeDiagnosis
-        where PalliativeDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
-    )
-    // or exists (([ConditionProblemsHealthConcerns: "Palliative Care Diagnosis"]) PalliativeProblemDiagnosis
-    //     where PalliativeProblemDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
-    // )
-    // or exists (([ConditionEncounterDiagnosis: "Palliative Care Diagnosis"]) PalliativeEncounterDiagnosis
-    //     where PalliativeEncounterDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
-    // )
-    or exists ((([Encounter: "Palliative Care Encounter"]).isEncounterPerformed()) PalliativeEncounter
-        where PalliativeEncounter.period.toInterval() overlaps day of "Measurement Period"
-    )
-    or exists ((([Procedure: "Palliative Care Intervention"]).isInterventionPerformed()) PalliativeIntervention
-        where PalliativeIntervention.performed.toInterval() overlaps day of "Measurement Period"
-    )
+  exists "Palliative Care Assessment"
+    or exists "Palliative Care Problem Diagnosis"
+    or exists "Palliative Care Encounter Diagnosis"
+    or exists "Palliative Care Encounters"
+    or exists "Palliative Care Interventions"

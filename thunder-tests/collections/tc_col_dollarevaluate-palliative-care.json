@@ -1,0 +1,37 @@
+{
+    "_id": "769cd4e4-f541-41b0-aaf8-94a6a48f56fe",
+    "colName": "$evaluate PalliativeCare",
+    "created": "2025-09-29T22:17:02.706Z",
+    "sortNum": 30000,
+    "folders": [],
+    "requests": [
+        {
+            "_id": "22b18fb1-0e9e-44a1-bda7-08e2b261286c",
+            "colId": "769cd4e4-f541-41b0-aaf8-94a6a48f56fe",
+            "containerId": "",
+            "name": "0ddb7f2f-a9ae-4c12-b3c6-e4fc0931fe30",
+            "url": "Library/PalliativeCare/$evaluate",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2025-09-29T22:17:59.781Z",
+            "modified": "2025-09-29T22:21:51.061Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"resourceType\": \"Parameters\",\n  \"parameter\": [\n    {\n      \"name\": \"subject\",\n      \"valueString\": \"Patient/0ddb7f2f-a9ae-4c12-b3c6-e4fc0931fe30\"\n    },\n    {\n      \"name\": \"parameters\",\n      \"resource\": {\n        \"resourceType\": \"Parameters\",\n        \"parameter\": [\n          {\n            \"name\": \"Measurement Period\",\n            \"valuePeriod\": {\n              \"start\": \"1900-01-01T00:00:00-10:00\",\n              \"end\": \"1900-12-31T23:59:00-10:00\"\n            }\n          }\n        ]\n      }\n    }\n  ]\n}",
+                "form": []
+            }
+        }
+    ],
+    "settings": {
+        "headers": [
+            {
+                "name": "Content-Type",
+                "value": "application/fhir+json"
+            }
+        ],
+        "options": {
+            "baseUrl": "{{FHIR_SERVER_URL}}"
+        }
+    }
+}

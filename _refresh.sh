@@ -30,7 +30,8 @@ if test -f "$tooling"; then
 		--include-terminology \
 		--include-errors \
 		--include-patients \
-		--skip-packages
+		--skip-packages \
+		--include-dependencies
 else
 	echo "IG Refresh NOT FOUND in input-cache. Please run _updateCQFTooling. Aborting..."
 fi
