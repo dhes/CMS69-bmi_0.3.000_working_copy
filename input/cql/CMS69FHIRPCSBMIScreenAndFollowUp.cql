@@ -284,11 +284,23 @@ define "Included":
     not "Denominator Exclusions" and 
     not "Denominator Exceptions"
 
-// Experimental
-define "High BMI And Follow Up Not Provided":
-  "Included" and
-  exists "Documented High BMI During Measurement Period" and
-  not exists "High BMI Interventions Ordered"
+// // Experimental
+// define "High BMI And Follow Up Not Provided":
+//   "Included" and
+//   exists "Documented High BMI During Measurement Period" and
+//   not exists "High BMI Interventions Ordered" // and performed
+
+  define "High BMI And Follow Up Not Provided":
+    "Included" and
+    exists ( "Documented High BMI During Measurement Period" HighBMI
+      without ( "High BMI Interventions Ordered"
+        union "High BMI Interventions Performed" ) HighBMIInterventions
+        such that if "Real Time Mode" then
+          Coalesce(HighBMIInterventions.performed.toInterval(), HighBMIInterventions.authoredOn.toInterval()) starts during day of Interval[DateTime(year from
+  Today(), 1, 1, 0, 0, 0, 0, 0), DateTime(year from Today(), 12, 31, 23, 59, 59, 999, 0)]
+        else
+          Coalesce(HighBMIInterventions.performed.toInterval(), HighBMIInterventions.authoredOn.toInterval()) starts during day of "Measurement Period"
+    )
 
 // Experimental
 define "High BMI Follow Up Banner":
@@ -304,14 +316,32 @@ define "Needs Screening":
 define "Needs Screening Banner":
   if "Needs Screening" then 'Action Needed: Assess BMI. Document BMI measurement in patient record. ' else null
 
-// Experimental
+// // Experimental
+// define "Low BMI And Follow Up Not Provided":
+//   "Included" and
+//   exists "Documented Low BMI During Measurement Period" and
+//   not exists "Low BMI Interventions Ordered" // and ...performed
+
 define "Low BMI And Follow Up Not Provided":
-  "Included" and
-  exists "Documented Low BMI During Measurement Period" and
-  not exists "Low BMI Interventions Ordered"
+  "Included" and 
+  exists ( "Documented Low BMI During Measurement Period" LowBMI
+      without ( "Low BMI Interventions Ordered"
+        union "Low BMI Interventions Performed" ) LowBMIInterventions
+        such that if "Real Time Mode" then
+          Coalesce(LowBMIInterventions.performed.toInterval(), LowBMIInterventions.authoredOn.toInterval()) starts during day of Interval[DateTime(year from Today(), 1, 1, 0, 0, 0, 0, 0), DateTime(year from Today(), 12, 31, 23, 59, 59, 999, 0)]
+        else
+          Coalesce(LowBMIInterventions.performed.toInterval(), LowBMIInterventions.authoredOn.toInterval()) starts during day of "Measurement Period"
+  )
+
 
 // Experimental
 define "Low BMI Follow Up Banner":
   if ("Real Time Mode" and "Low BMI And Follow Up Not Provided") then 
   'Action Required: Provide follow-up for low BMI. Consider counseling, pharmacotherapy or referral. Document intervention in patient record.'
+  else null
+
+// Experimental
+define "Denominator Exception Banner":
+  if "Denominator Exceptions" then
+    'Clinical contraindication documented. Quality measure requirements do not apply to this patient.'
   else null
