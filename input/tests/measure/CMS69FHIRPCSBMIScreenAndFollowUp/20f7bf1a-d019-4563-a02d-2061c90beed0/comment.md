@@ -1,0 +1,1 @@
+Given name of patient is DENEXFail but patient actually qualifies for Denominator Exception. 

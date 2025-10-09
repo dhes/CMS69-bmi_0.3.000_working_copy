@@ -27,7 +27,7 @@
     },
     {
       "url": "http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/cqfm-testCaseDescription",
-      "valueMarkdown": "Encounter first day of MP BP 120/79, declined referral to primary care/alternate"
+      "valueMarkdown": "Encounter first day of MP BP 120/79, declined referral to primary care/alternate. DH If patient truly declined (as opposed to 'referral contraindicated', which would mean patient is unable) then  a different reason code should be used in the Services Request (e.g. snomed CT 895451009 Referral to service declined by subject (situation)). This bring to our attention that the current CQL code allows Reason Refused only for refusing BMI vs not for refusing follow up. "
     }
   ],
   "modifierExtension": [

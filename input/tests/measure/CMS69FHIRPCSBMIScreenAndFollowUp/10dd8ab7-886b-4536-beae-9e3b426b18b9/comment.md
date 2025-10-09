@@ -1,0 +1,1 @@
+Since the Inpatient Encounter which ends with discharge to hospice occurs in 2026, the results of the MP 2025 and Real Time evaluations differ. In the former the Hospice Exclusion does not apply. However, all BMI goals were met so it works out well for the Practitioner. 

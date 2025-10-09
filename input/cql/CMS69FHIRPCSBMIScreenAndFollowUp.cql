@@ -186,7 +186,7 @@ define "Medical Reason For Not Documenting A Follow Up Plan For Low Or High BMI"
       with "Qualifying Encounter During Day Of Measurement Period" QualifyingEncounter
         such that NoBMIFollowUp.authoredOn same day as start of QualifyingEncounter.period
       where NoBMIFollowUp.status ~ 'completed'
-        and NoBMIFollowUp.reasonRefused in "Medical Reason"
+        and NoBMIFollowUp.reasonRefused in "Medical Reason" // consider adding "Patient Declined" DH
   )
     union ( ( [MedicationNotRequested: "Medications for Above Normal BMI"]
         union [MedicationNotRequested: "Medications for Below Normal BMI"] ) NoBMIFollowUp

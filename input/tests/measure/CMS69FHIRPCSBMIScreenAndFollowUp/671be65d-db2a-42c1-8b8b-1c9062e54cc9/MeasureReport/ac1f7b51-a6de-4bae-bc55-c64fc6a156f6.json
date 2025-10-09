@@ -27,7 +27,7 @@
     },
     {
       "url": "http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/cqfm-testCaseDescription",
-      "valueMarkdown": "High BMI with intervention ordered - f/u for above nl BMI, condition overweight. Fails because condition dateTime ends before intervention order "
+      "valueMarkdown": "High BMI with intervention ordered - f/u for above nl BMI, condition overweight. Fails because condition dateTime ends before intervention order DH: Confusing. BMI is low per Observation but high per Condition. And the Service Request it timed right in the middle of the Condition. Here's wha't really happening. The Observation is low BMI but the Condition code is high BMI, There is a ServiceRequest but it has no reasoncode. In order to qualify a ServiceRequest must have a .reason code or there must exists in the Condition list a Low BMI diagnosis. Since the dx in this case is High BMI, the ServiceRequest doesn't pass, and out DashBoard recommends action. When. "
     }
   ],
   "modifierExtension": [

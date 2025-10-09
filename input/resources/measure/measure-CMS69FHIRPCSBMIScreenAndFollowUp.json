@@ -727,7 +727,7 @@
         "valueString": "Medical Reason For Not Documenting A Follow Up Plan For Low Or High BMI"
       }, {
         "url": "statement",
-        "valueString": "define \"Medical Reason For Not Documenting A Follow Up Plan For Low Or High BMI\":\n  ( ( [ServiceNotRequested: \"Referrals Where Weight Assessment May Occur\"]\n      union [ServiceNotRequested: \"Follow Up for Above Normal BMI\"]\n      union [ServiceNotRequested: \"Follow Up for Below Normal BMI\"] ) NoBMIFollowUp\n      with \"Qualifying Encounter During Day Of Measurement Period\" QualifyingEncounter\n        such that NoBMIFollowUp.authoredOn same day as start of QualifyingEncounter.period\n      where NoBMIFollowUp.status ~ 'completed'\n        and NoBMIFollowUp.reasonRefused in \"Medical Reason\"\n  )\n    union ( ( [MedicationNotRequested: \"Medications for Above Normal BMI\"]\n        union [MedicationNotRequested: \"Medications for Below Normal BMI\"] ) NoBMIFollowUp\n        with \"Qualifying Encounter During Day Of Measurement Period\" QualifyingEncounter\n          such that NoBMIFollowUp.authoredOn same day as start of QualifyingEncounter.period\n        where NoBMIFollowUp.status ~ 'completed'\n          // TODO: https://oncprojectracking.healthit.gov/support/projects/MADIE/issues/MADIE-2124\n          // Expecting 4 failures until this translator issue is incorporated into MADiE\n          \n          \n          and NoBMIFollowUp.reasonCode in \"Medical Reason\"\n    )"
+        "valueString": "define \"Medical Reason For Not Documenting A Follow Up Plan For Low Or High BMI\":\n  ( ( [ServiceNotRequested: \"Referrals Where Weight Assessment May Occur\"]\n      union [ServiceNotRequested: \"Follow Up for Above Normal BMI\"]\n      union [ServiceNotRequested: \"Follow Up for Below Normal BMI\"] ) NoBMIFollowUp\n      with \"Qualifying Encounter During Day Of Measurement Period\" QualifyingEncounter\n        such that NoBMIFollowUp.authoredOn same day as start of QualifyingEncounter.period\n      where NoBMIFollowUp.status ~ 'completed'\n        and NoBMIFollowUp.reasonRefused in \"Medical Reason\" // consider adding \"Patient Declined\" DH\n  )\n    union ( ( [MedicationNotRequested: \"Medications for Above Normal BMI\"]\n        union [MedicationNotRequested: \"Medications for Below Normal BMI\"] ) NoBMIFollowUp\n        with \"Qualifying Encounter During Day Of Measurement Period\" QualifyingEncounter\n          such that NoBMIFollowUp.authoredOn same day as start of QualifyingEncounter.period\n        where NoBMIFollowUp.status ~ 'completed'\n          // TODO: https://oncprojectracking.healthit.gov/support/projects/MADIE/issues/MADIE-2124\n          // Expecting 4 failures until this translator issue is incorporated into MADiE\n          \n          \n          and NoBMIFollowUp.reasonCode in \"Medical Reason\"\n    )"
       }, {
         "url": "displaySequence",
         "valueInteger": 41
@@ -1573,7 +1573,7 @@
   "title": "Preventive Care and Screening: Body Mass Index (BMI) Screening and Follow-Up PlanFHIR",
   "status": "active",
   "experimental": false,
-  "date": "2025-10-03T15:57:30+00:00",
+  "date": "2025-10-08T09:01:09+00:00",
   "publisher": "Centers for Medicare & Medicaid Services (CMS)",
   "contact": [ {
     "telecom": [ {
