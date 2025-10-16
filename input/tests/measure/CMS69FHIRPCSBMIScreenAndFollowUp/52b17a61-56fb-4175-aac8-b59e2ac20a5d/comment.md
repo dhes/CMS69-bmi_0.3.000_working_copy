@@ -1,0 +1,1 @@
+This patient would pass the Numerator requirement were they not in Hospice. 

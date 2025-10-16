@@ -1,0 +1,1 @@
+SNOMED|183945002 Procedure declined for religious reason (situation) used in this patient. 

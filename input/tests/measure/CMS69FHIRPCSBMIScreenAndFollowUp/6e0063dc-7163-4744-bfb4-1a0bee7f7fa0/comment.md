@@ -1,0 +1,1 @@
+SNOMED|895451009 Referral to service declined by subject (situation) is mentioned in the markdown element of the test MeasureReport of this patient,but is not used in the actual patient ServiceRequest. Rather it is Treatment Not Tolerated. 

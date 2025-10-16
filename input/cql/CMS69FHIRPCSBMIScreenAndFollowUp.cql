@@ -37,7 +37,11 @@ context Patient
 define "Real Time Mode":
   Coalesce(year from start of "Measurement Period" = 1900, false)
 
-define MeasurementPeriod: "Measurement Period"
+define MeasurementPeriod: "Measurement Period" // 20261016 this identifier is never used
+
+// Experimental: analog of "Measurement Period"
+define "Current Period":
+  Interval[DateTime(year from Today(), 1, 1, 0, 0, 0, 0, 0), DateTime(year from Today(), 12, 31, 23, 59, 59,999, 0)]
 
 define "Date Of Birth": date from Patient.birthDate
 
@@ -74,7 +78,7 @@ define "BMI During Measurement Period":
     where BMI.value > 0 'kg/m2'
       and BMI.status in { 'final', 'amended', 'corrected' }
       and if "Real Time Mode" then
-        BMI.effective.toInterval() during day of Interval[DateTime(year from Today(), 1, 1, 0, 0, 0, 0, 0), DateTime(year from Today(), 12, 31, 23, 59, 59,999, 0)]
+        BMI.effective.toInterval() during day of "Current Period"
       else
         BMI.effective.toInterval() during day of "Measurement Period"
 
@@ -102,7 +106,7 @@ define "High BMI And Follow Up Provided":
     with ( "High BMI Interventions Ordered"
       union "High BMI Interventions Performed" ) HighBMIInterventions
       such that if "Real Time Mode" then
-        Coalesce(HighBMIInterventions.performed.toInterval(), HighBMIInterventions.authoredOn.toInterval()) starts during day of Interval[DateTime(year from Today(), 1, 1, 0, 0, 0, 0, 0), DateTime(year from Today(), 12, 31, 23, 59, 59, 999, 0)]
+        Coalesce(HighBMIInterventions.performed.toInterval(), HighBMIInterventions.authoredOn.toInterval()) starts during day of "Current Period"
       else
         Coalesce(HighBMIInterventions.performed.toInterval(), HighBMIInterventions.authoredOn.toInterval()) starts during day of "Measurement Period"
 
@@ -174,7 +178,7 @@ define "Low BMI And Follow Up Provided":
       with ( "Low BMI Interventions Ordered"
         union "Low BMI Interventions Performed" ) LowBMIInterventions
         such that if "Real Time Mode" then
-          Coalesce(LowBMIInterventions.performed.toInterval(), LowBMIInterventions.authoredOn.toInterval()) starts during day of Interval[DateTime(year from Today(), 1, 1, 0, 0, 0, 0, 0), DateTime(year from Today(), 12, 31, 23, 59, 59, 999, 0)]
+          Coalesce(LowBMIInterventions.performed.toInterval(), LowBMIInterventions.authoredOn.toInterval()) starts during day of "Current Period"
         else
           Coalesce(LowBMIInterventions.performed.toInterval(), LowBMIInterventions.authoredOn.toInterval()) starts during day of "Measurement Period"
   )
@@ -212,7 +216,7 @@ define "Is Pregnant During Day Of Measurement Period":
     with "Qualifying Encounter During Day Of Measurement Period" QualifyingEncounter
       such that PregnancyProblemDiagnosis.clinicalStatus ~ QICoreCommon."active"
         and if "Real Time Mode" then
-          PregnancyProblemDiagnosis.prevalenceInterval() overlaps day of Interval[DateTime(year from Today(), 1, 1, 0, 0, 0, 0, 0), DateTime(year from Today(), 12, 31, 23, 59, 59, 999, 0)]
+          PregnancyProblemDiagnosis.prevalenceInterval() overlaps day of "Current Period"
         else
           PregnancyProblemDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
   )
@@ -220,7 +224,7 @@ define "Is Pregnant During Day Of Measurement Period":
     with "Qualifying Encounter During Day Of Measurement Period" QualifyingEncounter
       such that PregnancyEncounterDiagnosis.clinicalStatus ~ QICoreCommon."active"
         and if "Real Time Mode" then
-          PregnancyEncounterDiagnosis.prevalenceInterval() overlaps day of Interval[DateTime(year from Today(), 1, 1, 0, 0, 0, 0, 0), DateTime(year from Today(), 12, 31, 23, 59, 59, 999, 0)]
+          PregnancyEncounterDiagnosis.prevalenceInterval() overlaps day of "Current Period"
         else
           PregnancyEncounterDiagnosis.prevalenceInterval() overlaps day of "Measurement Period"
   )
@@ -228,7 +232,7 @@ define "Is Pregnant During Day Of Measurement Period":
 define "Qualifying Encounter During Day Of Measurement Period":
   [Encounter: type in "Encounter to Evaluate BMI"] BMIEncounter
     where if "Real Time Mode" then
-      BMIEncounter.period during day of Interval[DateTime(year from Today(), 1, 1, 0, 0, 0, 0, 0), DateTime(year from Today(), 12, 31, 23, 59, 59, 999, 0)]
+      BMIEncounter.period during day of "Current Period"
     else
       BMIEncounter.period during day of "Measurement Period"
       and BMIEncounter.class !~ "virtual"
@@ -296,8 +300,7 @@ define "Included":
       without ( "High BMI Interventions Ordered"
         union "High BMI Interventions Performed" ) HighBMIInterventions
         such that if "Real Time Mode" then
-          Coalesce(HighBMIInterventions.performed.toInterval(), HighBMIInterventions.authoredOn.toInterval()) starts during day of Interval[DateTime(year from
-  Today(), 1, 1, 0, 0, 0, 0, 0), DateTime(year from Today(), 12, 31, 23, 59, 59, 999, 0)]
+          Coalesce(HighBMIInterventions.performed.toInterval(), HighBMIInterventions.authoredOn.toInterval()) starts during day of "Current Period"
         else
           Coalesce(HighBMIInterventions.performed.toInterval(), HighBMIInterventions.authoredOn.toInterval()) starts during day of "Measurement Period"
     )
@@ -328,7 +331,7 @@ define "Low BMI And Follow Up Not Provided":
       without ( "Low BMI Interventions Ordered"
         union "Low BMI Interventions Performed" ) LowBMIInterventions
         such that if "Real Time Mode" then
-          Coalesce(LowBMIInterventions.performed.toInterval(), LowBMIInterventions.authoredOn.toInterval()) starts during day of Interval[DateTime(year from Today(), 1, 1, 0, 0, 0, 0, 0), DateTime(year from Today(), 12, 31, 23, 59, 59, 999, 0)]
+          Coalesce(LowBMIInterventions.performed.toInterval(), LowBMIInterventions.authoredOn.toInterval()) starts during day of "Current Period"
         else
           Coalesce(LowBMIInterventions.performed.toInterval(), LowBMIInterventions.authoredOn.toInterval()) starts during day of "Measurement Period"
   )
