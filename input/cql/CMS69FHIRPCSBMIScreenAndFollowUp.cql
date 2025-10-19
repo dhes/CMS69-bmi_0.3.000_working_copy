@@ -30,7 +30,7 @@ code "Encounter for palliative care": 'Z51.5' from "ICD10CM" display 'Encounter 
 code "Functional Assessment of Chronic Illness Therapy - Palliative Care Questionnaire (FACIT-Pal)": '71007-9' from "LOINC" display 'Functional Assessment of Chronic Illness Therapy - Palliative Care Questionnaire (FACIT-Pal)'
 code "virtual": 'VR' from "ActCode" display 'virtual'
 
-parameter "Measurement Period" Interval<DateTime> // default Interval[DateTime(2025,1,1,0,0,0,0,0), DateTime(2025,12,31,23,59,59,999,0)]
+parameter "Measurement Period" Interval<DateTime> default Interval[DateTime(2025,1,1,0,0,0,0,0), DateTime(2025,12,31,23,59,59,999,0)]
 
 context Patient
 
@@ -145,6 +145,38 @@ define "Medical Reason Or Patient Reason For Not Performing BMI Exam":
       and ( NoBMI.notDoneReason in "Patient Declined"
           or NoBMI.notDoneReason in "Medical Reason"
       )
+
+// Experimental. These next four definitions expose BMI Not Done Banner Text for display in the Dashboard
+define "BMI Not Done Observation":
+    First(
+      "Medical Reason Or Patient Reason For Not Performing BMI Exam" R
+      sort by effective.toInterval().low desc
+    )
+
+  define "BMI Not Done Category":
+    "BMI Not Done Observation" obs
+    let reasonCode: obs.notDoneReason
+    return
+      if reasonCode in "Medical Reason"
+      then 'Medical Reason'
+      else if reasonCode in "Patient Declined"
+      then 'Patient Reason'
+      else 'Unknown Reason'
+
+  define "BMI Not Done Reason Display":
+    "BMI Not Done Observation" obs
+      let reasonExt: First(obs.extension E
+            where E.url = 'http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-notDoneReason')
+      return
+        if reasonExt is not null
+        then (reasonExt.value as System.Concept).codes[0].display
+        else 'Reason not documented'
+
+  define "BMI Exception Banner Text":
+    'BMI Assessment Exception: ' +  "BMI Not Done Category" + ' - ' + "BMI Not Done Reason Display"
+
+// define "Medical Reason Or Patient Reason For Not Performing BMI Exam Display":
+//   (First(First("Medical Reason Or Patient Reason For Not Performing BMI Exam").extension).value as System.Concept).codes[0].display
 
 define "Low BMI Interventions Ordered":
   ( ( [ServiceRequest: "Follow Up for Below Normal BMI"]
