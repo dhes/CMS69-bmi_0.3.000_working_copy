@@ -182,23 +182,8 @@ define "BMI Not Done Observation":
 
   define "BMI Follow-Up Not Done Category":
     if exists "Medical Reason For Not Documenting A Follow Up Plan For Low Or High BMI" 
-		  then 'Medical Reason' 
-			else null
-    // "BMI Follow-Up Not Done Resources" obs
-    // let serviceReason: if obs is QICore.ServiceNotRequested
-    //                    then (obs as QICore.ServiceNotRequested).reasonRefused  // ✅ Extension property
-    //                    else null,
-    //     medicationReason: if obs is QICore.MedicationNotRequested
-    //                       then (obs as QICore.MedicationNotRequested).reasonCode  // ✅ Native element
-    //                       else null
-    // return
-    //   if (serviceReason is not null and serviceReason in "Medical Reason")
-    //      or (medicationReason is not null and medicationReason in "Medical Reason")
-    //   then 'Medical Reason'
-    //   else if (serviceReason is not null and serviceReason in "Patient Declined")
-    //           or (medicationReason is not null and medicationReason in "Patient Declined")
-    //   then 'Patient Reason'
-    //   else 'Unknown Reason'
+      then 'Medical Reason' // as of the 2026 eCQM version, "Patient refused" is not implemented
+    else null
 
 define "BMI Follow-Up Not Done Reason Display": 
   if "BMI Follow-Up Not Done Resources" is ServiceNotRequested
@@ -208,10 +193,9 @@ define "BMI Follow-Up Not Done Reason Display":
     then "BMI Follow-Up Not Done Resources".reasonCode.codes[0].display
   else null
 
-//   define "BMI Follow-Up Exception Banner Text":
-//     'BMI Follow-Up Exception: ' + "BMI Follow-Up Not Done Category" + ' - ' + "BMI Follow-Up Not Done Reason Display"
-
-// End of experimental BMI Not Done Banner 
+define "BMI Follow-Up Exception Banner Text":
+  'BMI Follow-Up Exception: ' + "BMI Follow-Up Not Done Category" + ' - ' + "BMI Follow-Up Not Done Reason Display"
+// End Experimental Section BMI Follow-Up Not Done Banner
 
 // define "Medical Reason Or Patient Reason For Not Performing BMI Exam Display":
 //   (First(First("Medical Reason Or Patient Reason For Not Performing BMI Exam").extension).value as System.Concept).codes[0].display
