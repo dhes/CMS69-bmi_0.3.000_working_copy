@@ -146,7 +146,7 @@ define "Medical Reason Or Patient Reason For Not Performing BMI Exam":
           or NoBMI.notDoneReason in "Medical Reason"
       )
 
-// Experimental. These next four definitions expose BMI Not Done Banner Text for display in the Dashboard
+// Begin Experimental Section BMI Not Done Banner
 define "BMI Not Done Observation":
     First(
       "Medical Reason Or Patient Reason For Not Performing BMI Exam" R
@@ -174,6 +174,44 @@ define "BMI Not Done Observation":
 
   define "BMI Exception Banner Text":
     'BMI Assessment Exception: ' +  "BMI Not Done Category" + ' - ' + "BMI Not Done Reason Display"
+// End of Experimental Section BMI Not Done Banner 
+
+// Begin Experimental Section BMI Follow-Up Not Done Banner
+  define "BMI Follow-Up Not Done Resources":
+  First("Medical Reason For Not Documenting A Follow Up Plan For Low Or High BMI")
+
+  define "BMI Follow-Up Not Done Category":
+    if exists "Medical Reason For Not Documenting A Follow Up Plan For Low Or High BMI" 
+		  then 'Medical Reason' 
+			else null
+    // "BMI Follow-Up Not Done Resources" obs
+    // let serviceReason: if obs is QICore.ServiceNotRequested
+    //                    then (obs as QICore.ServiceNotRequested).reasonRefused  // ✅ Extension property
+    //                    else null,
+    //     medicationReason: if obs is QICore.MedicationNotRequested
+    //                       then (obs as QICore.MedicationNotRequested).reasonCode  // ✅ Native element
+    //                       else null
+    // return
+    //   if (serviceReason is not null and serviceReason in "Medical Reason")
+    //      or (medicationReason is not null and medicationReason in "Medical Reason")
+    //   then 'Medical Reason'
+    //   else if (serviceReason is not null and serviceReason in "Patient Declined")
+    //           or (medicationReason is not null and medicationReason in "Patient Declined")
+    //   then 'Patient Reason'
+    //   else 'Unknown Reason'
+
+define "BMI Follow-Up Not Done Reason Display": 
+  if "BMI Follow-Up Not Done Resources" is ServiceNotRequested
+    then (First("BMI Follow-Up Not Done Resources".extension E
+      where E.url = 'http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-reasonRefused').value as System.Concept).codes[0].display
+  else if "BMI Follow-Up Not Done Resources" is MedicationNotRequested
+    then "BMI Follow-Up Not Done Resources".reasonCode.codes[0].display
+  else null
+
+//   define "BMI Follow-Up Exception Banner Text":
+//     'BMI Follow-Up Exception: ' + "BMI Follow-Up Not Done Category" + ' - ' + "BMI Follow-Up Not Done Reason Display"
+
+// End of experimental BMI Not Done Banner 
 
 // define "Medical Reason Or Patient Reason For Not Performing BMI Exam Display":
 //   (First(First("Medical Reason Or Patient Reason For Not Performing BMI Exam").extension).value as System.Concept).codes[0].display
