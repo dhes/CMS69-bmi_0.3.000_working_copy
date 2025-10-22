@@ -30,7 +30,7 @@ code "Encounter for palliative care": 'Z51.5' from "ICD10CM" display 'Encounter 
 code "Functional Assessment of Chronic Illness Therapy - Palliative Care Questionnaire (FACIT-Pal)": '71007-9' from "LOINC" display 'Functional Assessment of Chronic Illness Therapy - Palliative Care Questionnaire (FACIT-Pal)'
 code "virtual": 'VR' from "ActCode" display 'virtual'
 
-parameter "Measurement Period" Interval<DateTime> default Interval[DateTime(2025,1,1,0,0,0,0,0), DateTime(2025,12,31,23,59,59,999,0)]
+parameter "Measurement Period" Interval<DateTime> // default Interval[DateTime(2025,1,1,0,0,0,0,0), DateTime(2025,12,31,23,59,59,999,0)]
 
 context Patient
 
