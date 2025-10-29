@@ -1,1 +1,1 @@
-That's odd. This patient has not had a BMI due to a Medical Reason. Yet it is documented that they were *not* prescribed phentermine. 
+That's odd. This patient has not had a BMI due to a Medical Reason. Yet it is documented that they were *not* prescribed phentermine. That makes this patient eligible for Denominator Exception at both point: BMI measurement and Follow up for high BMI. Our Exception logic prioritizes the first and the Dashboard is displaying the expectected banner. 

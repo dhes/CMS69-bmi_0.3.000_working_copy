@@ -30,7 +30,7 @@ code "Encounter for palliative care": 'Z51.5' from "ICD10CM" display 'Encounter 
 code "Functional Assessment of Chronic Illness Therapy - Palliative Care Questionnaire (FACIT-Pal)": '71007-9' from "LOINC" display 'Functional Assessment of Chronic Illness Therapy - Palliative Care Questionnaire (FACIT-Pal)'
 code "virtual": 'VR' from "ActCode" display 'virtual'
 
-parameter "Measurement Period" Interval<DateTime> // default Interval[DateTime(2025,1,1,0,0,0,0,0), DateTime(2025,12,31,23,59,59,999,0)]
+parameter "Measurement Period" Interval<DateTime> default Interval[DateTime(2025,1,1,0,0,0,0,0), DateTime(2025,12,31,23,59,59,999,0)]
 
 context Patient
 
@@ -147,55 +147,154 @@ define "Medical Reason Or Patient Reason For Not Performing BMI Exam":
       )
 
 // Begin Experimental Section BMI Not Done Banner
-define "BMI Not Done Observation":
-    First(
-      "Medical Reason Or Patient Reason For Not Performing BMI Exam" R
-      sort by effective.toInterval().low desc
-    )
+// define "BMI Not Done Observation":
+//     First(
+//       "Medical Reason Or Patient Reason For Not Performing BMI Exam" R
+//       sort by effective.toInterval().low desc
+//     )
 
-  define "BMI Not Done Category":
-    "BMI Not Done Observation" obs
-    let reasonCode: obs.notDoneReason
-    return
-      if reasonCode in "Medical Reason"
-      then 'Medical Reason'
-      else if reasonCode in "Patient Declined"
-      then 'Patient Reason'
-      else 'Unknown Reason'
+// define A: 
+//   "Medical Reason Or Patient Reason For Not Performing BMI Exam" obs
+//     let
+//       notDoneReason: obs.notDoneReason,  // a QICore ObservationCancelled CodableConcept extension mapped to a notDoneReason element
+//       reasonCategory: 
+//         if notDoneReason in "Medical Reason"
+//           then 'Medical Reason'
+//         else if notDoneReason in "Patient Declined"
+//          then 'Patient Reason'
+//         else null,
+//       reasonSystem: 
+//         Last(Split(notDoneReason.codes[0].system, '/')),
+//       reasonSystemCode: 
+//         reasonSystem + '|' + notDoneReason.codes[0].code,
+//       reasonDisplay: notDoneReason.codes[0].display
+//     return Tuple {
+//       category: reasonCategory,
+//       bannerCode: reasonSystemCode, 
+//       display: reasonDisplay,
+//       bannerText: 'BMI Assessment Exception, ' + reasonCategory + ': ' + reasonDisplay
+//     }
 
-  define "BMI Not Done Reason Display":
-    "BMI Not Done Observation" obs
-      let reasonExt: First(obs.extension E
-            where E.url = 'http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-notDoneReason')
-      return
-        if reasonExt is not null
-        then (reasonExt.value as System.Concept).codes[0].display
-        else 'Reason not documented'
+define "Assessment Not Done": 
+  "Medical Reason Or Patient Reason For Not Performing BMI Exam" obs
+    let
+      notDoneReason: obs.notDoneReason.codes[0],  // a QICore ObservationCancelled CodableConcept extension mapped to a notDoneReason element
+      reasonCategory: 
+        if notDoneReason in "Medical Reason"
+          then 'Medical Reason'
+        else if notDoneReason in "Patient Declined"
+         then 'Patient Reason'
+        else null,
+      reasonSystem: 
+        Last(Split(notDoneReason.system, '/')),
+      reasonSystemCode: 
+        reasonSystem + '|' + notDoneReason.code,
+      reasonDisplay: notDoneReason.display
+    return Tuple {
+      category: reasonCategory,
+      bannerCode: reasonSystemCode, 
+      display: reasonDisplay,
+      bannerText: 'BMI Assessment Exception, ' + reasonCategory + ': ' + reasonDisplay
+    }
 
-  define "BMI Exception Banner Text":
-    'BMI Assessment Exception: ' +  "BMI Not Done Category" + ' - ' + "BMI Not Done Reason Display"
+// define B: A.bannerCode
+// define C: A.bannerText
+// define D: A.display
+// define E: A.category + A.display
+// define F: 
+
+// define "BMI Not Done Category":
+//   "BMI Not Done Observation" obs
+//   let reasonCode: obs.notDoneReason
+//   return
+//     if reasonCode in "Medical Reason"
+//       then 'Medical Reason'
+//     else if reasonCode in "Patient Declined"
+//       then 'Patient Reason'
+//     else 'Unknown Reason'
+
+// define "BMI Not Done Reason Display":
+//   "BMI Not Done Observation" obs
+//     let reasonExt: First(obs.extension E
+//           where E.url = 'http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-notDoneReason')
+//     return
+//       if reasonExt is not null
+//         then (reasonExt.value as System.Concept).codes[0].display
+//       else 'Reason not documented'
+
+// define Refactored1: // A proposed refactoring of "BMI Not Done Reason Display"
+//   "BMI Not Done Observation".notDoneReason.codes[0].display
+
+// define BannerSystemCode: // A proposed refactoring to expose "BMI Not Done Reason Display" system|code
+//   "BMI Not Done Observation" O
+//    let notDoneSystem: Last(Split(O.notDoneReason.codes[0].system, '/')),
+//        notDoneCode: O.notDoneReason.codes[0].code
+//   return notDoneSystem + '|' + notDoneCode
+
+
+//   define "BMI Assessment Exception Banner Text":
+//     if exists "Medical Reason Or Patient Reason For Not Performing BMI Exam"
+//       then 'BMI Assessment Exception: ' +  "BMI Not Done Category" + ' - ' + "BMI Not Done Reason Display"
+//     else null
 // End of Experimental Section BMI Not Done Banner 
 
 // Begin Experimental Section BMI Follow-Up Not Done Banner
-  define "BMI Follow-Up Not Done Resources":
-  First("Medical Reason For Not Documenting A Follow Up Plan For Low Or High BMI")
+//   define "BMI Follow-Up Not Done Resources":
+//   First("Medical Reason For Not Documenting A Follow Up Plan For Low Or High BMI")
 
-  define "BMI Follow-Up Not Done Category":
-    if exists "Medical Reason For Not Documenting A Follow Up Plan For Low Or High BMI" 
-      then 'Medical Reason' // as of the 2026 eCQM version, "Patient refused" is not implemented
-    else null
+//   define "BMI Follow-Up Not Done Category":
+//     if exists "Medical Reason For Not Documenting A Follow Up Plan For Low Or High BMI" 
+//       then 'Medical Reason' // as of the 2026 eCQM version, "Patient refused" is not implemented
+//     else null
 
-define "BMI Follow-Up Not Done Reason Display": 
-  if "BMI Follow-Up Not Done Resources" is ServiceNotRequested
-    then (First("BMI Follow-Up Not Done Resources".extension E
-      where E.url = 'http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-reasonRefused').value as System.Concept).codes[0].display
-  else if "BMI Follow-Up Not Done Resources" is MedicationNotRequested
-    then "BMI Follow-Up Not Done Resources".reasonCode.codes[0].display
-  else null
+// define "BMI Follow-Up Not Done Reason Display": 
+//   if "BMI Follow-Up Not Done Resources" is ServiceNotRequested
+//     // then (First("BMI Follow-Up Not Done Resources".extension E
+//     //   where E.url = 'http://hl7.org/fhir/us/qicore/StructureDefinition/qicore-reasonRefused').value as System.Concept).codes[0].display
+//     then "BMI Follow-Up Not Done Resources".reasonRefused.codes[0].display
+//   else if "BMI Follow-Up Not Done Resources" is MedicationNotRequested
+//     then "BMI Follow-Up Not Done Resources".reasonCode.codes[0].display
+//   else null
 
-define "BMI Follow-Up Exception Banner Text":
-  'BMI Follow-Up Exception: ' + "BMI Follow-Up Not Done Category" + ' - ' + "BMI Follow-Up Not Done Reason Display"
+// define "BMI Follow-Up Exception Banner Text":
+//   if exists "Medical Reason For Not Documenting A Follow Up Plan For Low Or High BMI"
+//     then 'BMI Follow-Up Exception: ' + "BMI Follow-Up Not Done Category" + ' - ' + "BMI Follow-Up Not Done Reason Display"
+//   else null
+
+// next iteration
+define "Follow Up Not Done":
+  "Medical Reason For Not Documenting A Follow Up Plan For Low Or High BMI" res
+    let
+      notDoneReason: 
+        if res is ServiceNotRequested then res.reasonRefused.codes[0]
+        else if res is MedicationNotRequested then res.reasonCode.codes[0]
+        else null,
+      reasonCategory: 
+            if notDoneReason in "Medical Reason"
+              then 'Medical Reason'
+            else if notDoneReason in "Patient Declined"
+         then 'Patient Reason'
+        else null,
+      reasonSystem: 
+        Last(Split(notDoneReason.system, '/')),
+      reasonSystemCode: 
+        reasonSystem + '|' + notDoneReason.code,
+      reasonDisplay: notDoneReason.display
+    return Tuple {
+      category: reasonCategory,
+      bannerCode: reasonSystemCode, 
+      display: reasonDisplay,
+      bannerText: 'Follow Up Exception, ' + reasonCategory + ': ' + reasonDisplay
+    }
+    // return notDoneReason  // as System.Concept
+
 // End Experimental Section BMI Follow-Up Not Done Banner
+
+define "Not Done Exceptions":
+  "Assessment Not Done" union "Follow Up Not Done"
+
+// define "Denominator Exceptions Banner Text":
+//   Coalesce("BMI Assessment Exception Banner Text", "BMI Follow-Up Exception Banner Text")
 
 // define "Medical Reason Or Patient Reason For Not Performing BMI Exam Display":
 //   (First(First("Medical Reason Or Patient Reason For Not Performing BMI Exam").extension).value as System.Concept).codes[0].display

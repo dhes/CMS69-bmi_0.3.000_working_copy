@@ -262,7 +262,7 @@
         "valueString": "Low BMI Interventions Ordered"
       }, {
         "url": "statement",
-        "valueString": "// define \"Medical Reason Or Patient Reason For Not Performing BMI Exam Display\":\n//   (First(First(\"Medical Reason Or Patient Reason For Not Performing BMI Exam\").extension).value as System.Concept).codes[0].display\n\ndefine \"Low BMI Interventions Ordered\":\n  ( ( [ServiceRequest: \"Follow Up for Below Normal BMI\"]\n    union [ServiceRequest: \"Referrals Where Weight Assessment May Occur\"]\n      union [MedicationRequest: \"Medications for Below Normal BMI\"] ) LowInterventionsOrdered\n      where LowInterventionsOrdered.reasonCode in \"Underweight\"\n        or ( exists [ConditionProblemsHealthConcerns: \"Underweight\"] UnderweightDiagnosis\n            where ( UnderweightDiagnosis.isProblemListItem ( )\n                or UnderweightDiagnosis.isHealthConcern ( )\n            )\n              and UnderweightDiagnosis.isActive ( )\n              and UnderweightDiagnosis.prevalenceInterval ( ) starts before or on day of LowInterventionsOrdered.authoredOn\n        )\n  )"
+        "valueString": "// define \"Denominator Exceptions Banner Text\":\n//   Coalesce(\"BMI Assessment Exception Banner Text\", \"BMI Follow-Up Exception Banner Text\")\n\n// define \"Medical Reason Or Patient Reason For Not Performing BMI Exam Display\":\n//   (First(First(\"Medical Reason Or Patient Reason For Not Performing BMI Exam\").extension).value as System.Concept).codes[0].display\n\ndefine \"Low BMI Interventions Ordered\":\n  ( ( [ServiceRequest: \"Follow Up for Below Normal BMI\"]\n    union [ServiceRequest: \"Referrals Where Weight Assessment May Occur\"]\n      union [MedicationRequest: \"Medications for Below Normal BMI\"] ) LowInterventionsOrdered\n      where LowInterventionsOrdered.reasonCode in \"Underweight\"\n        or ( exists [ConditionProblemsHealthConcerns: \"Underweight\"] UnderweightDiagnosis\n            where ( UnderweightDiagnosis.isProblemListItem ( )\n                or UnderweightDiagnosis.isHealthConcern ( )\n            )\n              and UnderweightDiagnosis.isActive ( )\n              and UnderweightDiagnosis.prevalenceInterval ( ) starts before or on day of LowInterventionsOrdered.authoredOn\n        )\n  )"
       }, {
         "url": "displaySequence",
         "valueInteger": 10
@@ -1588,7 +1588,7 @@
   "title": "Preventive Care and Screening: Body Mass Index (BMI) Screening and Follow-Up PlanFHIR",
   "status": "active",
   "experimental": false,
-  "date": "2025-10-19T08:42:45+00:00",
+  "date": "2025-10-29T01:05:51+00:00",
   "publisher": "Centers for Medicare & Medicaid Services (CMS)",
   "contact": [ {
     "telecom": [ {
