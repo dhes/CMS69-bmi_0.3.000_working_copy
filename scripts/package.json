@@ -1,0 +1,14 @@
+{
+  "name": "bmi-analysis-scripts",
+  "version": "1.0.0",
+  "description": "BMI Patient Score Analysis Utility",
+  "main": "analyzeBMIScores.js",
+  "type": "commonjs",
+  "scripts": {
+    "analyze": "node analyzeBMIScores.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "node-fetch": "^3.3.2"
+  }
+}

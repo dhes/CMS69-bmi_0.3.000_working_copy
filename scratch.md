@@ -1,1 +1,40 @@
-Enc last day of MP as well as BMI which results 16 kg/m², dx underweight onset 1/2023 now \"inactive\" 7/24/2024, dietary order 7/25/2024, expected to fail numer d/t intervention after the fact.\n\n---\n**Comments:**\n- Interpretation: BMI < 18.5 ⇒ underweight.\n- Check whether the 'inactive' condition status suppresses numerator inclusion.\n- Might re-run with encounter one day earlier to confirm boundary behavior.
+{
+  "resourceType": "Observation",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/us/core/StructureDefinition/us-core-bmi"
+    ]
+  },
+  "status": "final",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+          "code": "vital-signs",
+          "display": "Vital Signs"
+        }
+      ]
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "39156-5",
+        "display": "Body mass index (BMI) [Ratio]",
+        "userSelected": true
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/{patientId}"
+  },
+  "effectiveDateTime": "{dateTime}",
+  "valueQuantity": {
+    "value": {bmi},
+    "unit": "kg/m2",
+    "system": "http://unitsofmeasure.org",
+    "code": "kg/m2"
+  }
+}

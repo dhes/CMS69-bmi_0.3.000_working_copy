@@ -27,7 +27,7 @@
     },
     {
       "url": "http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/cqfm-testCaseDescription",
-      "valueMarkdown": "Age 18 the first 30 minutes of the first day of the year and first day of the MP. "
+      "valueMarkdown": "Age 18 the first 30 minutes of the first day of the year and first day of the MP. DH Stated intent is young age case but DOB seems to be off a couple of years ;). "
     }
   ],
   "modifierExtension": [

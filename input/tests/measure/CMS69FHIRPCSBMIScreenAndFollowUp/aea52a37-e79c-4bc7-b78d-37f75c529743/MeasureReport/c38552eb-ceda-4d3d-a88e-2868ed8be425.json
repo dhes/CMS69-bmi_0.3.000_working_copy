@@ -27,7 +27,7 @@
     },
     {
       "url": "http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/cqfm-testCaseDescription",
-      "valueMarkdown": "Enc. during MP, age 17, fails because patient is not age 18 or older"
+      "valueMarkdown": "Enc. during MP, age 17, fails because patient is not age 18 or older. DH 18 all year."
     }
   ],
   "modifierExtension": [

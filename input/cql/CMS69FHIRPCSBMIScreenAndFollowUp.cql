@@ -478,6 +478,13 @@ define "Needs Screening Banner":
 //   exists "Documented Low BMI During Measurement Period" and
 //   not exists "Low BMI Interventions Ordered" // and ...performed
 
+define "Needs Encounter":
+  Included and 
+  not exists "Qualifying Encounter During Day Of Measurement Period"
+
+define "Needs Encounter Banner":
+  if "Needs Encounter" then 'Action Needed: Schedule Encounter.' else null
+
 define "Low BMI And Follow Up Not Provided":
   "Included" and 
   exists ( "Documented Low BMI During Measurement Period" LowBMI

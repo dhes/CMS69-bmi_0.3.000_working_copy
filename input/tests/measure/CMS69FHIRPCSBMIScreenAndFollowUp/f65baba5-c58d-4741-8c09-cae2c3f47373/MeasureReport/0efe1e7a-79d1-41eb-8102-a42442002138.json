@@ -27,7 +27,7 @@
     },
     {
       "url": "http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/cqfm-testCaseDescription",
-      "valueMarkdown": "Encounter One Day After MP."
+      "valueMarkdown": "Encounter One Day After MP.DH - this description appears to be in error. The encounter is in the first day of the MP, but its type is not in the required valueSet. "
     }
   ],
   "modifierExtension": [
