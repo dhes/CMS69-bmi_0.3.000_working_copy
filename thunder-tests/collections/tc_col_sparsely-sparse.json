@@ -1,0 +1,383 @@
+{
+    "_id": "7db94a2b-e374-4d77-9d4b-d68487af80b7",
+    "colName": "sparsely sparse",
+    "created": "2025-11-05T19:36:19.232Z",
+    "sortNum": 50000,
+    "folders": [
+        {
+            "_id": "86bba97f-4c9b-4da9-a29b-766eb241a993",
+            "name": "01",
+            "containerId": "",
+            "created": "2025-11-05T19:37:33.557Z",
+            "sortNum": 10000
+        },
+        {
+            "_id": "d68ba393-ea81-4a5e-9dc6-adb913aeed46",
+            "name": "02",
+            "containerId": "",
+            "created": "2025-11-05T23:38:52.045Z",
+            "sortNum": 20000
+        },
+        {
+            "_id": "286887db-ba99-40e9-8661-38091109abcf",
+            "name": "utilities (some risky)",
+            "containerId": "",
+            "created": "2025-11-05T23:46:59.443Z",
+            "sortNum": 20000
+        },
+        {
+            "_id": "f7f2c607-f38d-444b-96ba-b8d96e393065",
+            "name": "03",
+            "containerId": "",
+            "created": "2025-11-14T01:00:03.863Z",
+            "sortNum": 20000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "519d638f-e9f4-44d1-a466-2fa4f8092153",
+            "colId": "7db94a2b-e374-4d77-9d4b-d68487af80b7",
+            "containerId": "86bba97f-4c9b-4da9-a29b-766eb241a993",
+            "name": "deploy afresh",
+            "url": "Patient/sparse-01",
+            "method": "PUT",
+            "sortNum": 20000,
+            "created": "2025-11-05T19:38:01.999Z",
+            "modified": "2025-11-05T19:38:53.066Z",
+            "headers": [],
+            "body": {
+                "type": "binary",
+                "raw": "",
+                "form": [],
+                "binary": "../sparse-tests/sparse-01.json"
+            }
+        },
+        {
+            "_id": "ffad63d5-8756-4f40-827e-17a649ddd061",
+            "colId": "7db94a2b-e374-4d77-9d4b-d68487af80b7",
+            "containerId": "86bba97f-4c9b-4da9-a29b-766eb241a993",
+            "name": "are you there?",
+            "url": "Patient/sparse-01/_history",
+            "method": "GET",
+            "sortNum": 30000,
+            "created": "2025-11-05T19:48:57.636Z",
+            "modified": "2025-11-05T22:56:59.100Z",
+            "headers": [],
+            "body": {
+                "type": "binary",
+                "raw": "",
+                "form": [],
+                "binary": "../sparse-tests/sparse-01.json"
+            }
+        },
+        {
+            "_id": "753d163e-72a3-4b34-821b-8e2f5fffcf71",
+            "colId": "7db94a2b-e374-4d77-9d4b-d68487af80b7",
+            "containerId": "86bba97f-4c9b-4da9-a29b-766eb241a993",
+            "name": "everything",
+            "url": "Patient/sparse-01/$everything",
+            "method": "GET",
+            "sortNum": 40000,
+            "created": "2025-11-05T20:02:09.711Z",
+            "modified": "2025-11-05T20:05:02.070Z",
+            "headers": [],
+            "body": {
+                "type": "binary",
+                "raw": "",
+                "form": [],
+                "binary": "../sparse-tests/sparse-01.json"
+            }
+        },
+        {
+            "_id": "8707ea92-5ad8-4aac-afe9-63de3bc37dd0",
+            "colId": "7db94a2b-e374-4d77-9d4b-d68487af80b7",
+            "containerId": "86bba97f-4c9b-4da9-a29b-766eb241a993",
+            "name": "delete everything",
+            "url": "Patient/sparse-01?_cascade=delete",
+            "method": "DELETE",
+            "sortNum": 50000,
+            "created": "2025-11-05T22:22:02.990Z",
+            "modified": "2025-11-05T22:28:31.561Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "_cascade",
+                    "value": "delete",
+                    "isPath": false
+                }
+            ],
+            "body": {
+                "type": "binary",
+                "raw": "",
+                "form": [],
+                "binary": "../sparse-tests/sparse-01.json"
+            }
+        },
+        {
+            "_id": "968106b0-6c31-4a7f-ab11-4817c0aa0503",
+            "colId": "7db94a2b-e374-4d77-9d4b-d68487af80b7",
+            "containerId": "86bba97f-4c9b-4da9-a29b-766eb241a993",
+            "name": "expunge patient",
+            "url": "Patient/sparse-01/$expunge",
+            "method": "POST",
+            "sortNum": 60000,
+            "created": "2025-11-05T22:50:42.967Z",
+            "modified": "2025-11-05T23:01:15.500Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": " {\n    \"resourceType\": \"Parameters\",\n    \"parameter\": [\n      {\n        \"name\": \"expungeDeletedResources\",\n        \"valueBoolean\": true\n      },\n      {\n        \"name\": \"count\",\n        \"valueInteger\": 100\n      }\n    ]\n  }",
+                "form": []
+            }
+        },
+        {
+            "_id": "61ee4a2e-6893-457f-b1de-f2268a42196a",
+            "colId": "7db94a2b-e374-4d77-9d4b-d68487af80b7",
+            "containerId": "86bba97f-4c9b-4da9-a29b-766eb241a993",
+            "name": "misc",
+            "url": "Encounter/_history",
+            "method": "GET",
+            "sortNum": 40000,
+            "created": "2025-11-05T23:04:59.578Z",
+            "modified": "2025-11-05T23:14:00.194Z",
+            "headers": [],
+            "body": {
+                "type": "binary",
+                "raw": "",
+                "form": [],
+                "binary": "../sparse-tests/sparse-01.json"
+            }
+        },
+        {
+            "_id": "98031674-80ad-4cab-b9ff-6931df3c0496",
+            "colId": "7db94a2b-e374-4d77-9d4b-d68487af80b7",
+            "containerId": "86bba97f-4c9b-4da9-a29b-766eb241a993",
+            "name": "CAREFUL expunge deleted Observations",
+            "url": "Observation/$expunge",
+            "method": "POST",
+            "sortNum": 85000,
+            "created": "2025-11-05T23:10:13.186Z",
+            "modified": "2025-11-05T23:10:49.200Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": " {\n    \"resourceType\": \"Parameters\",\n    \"parameter\": [\n      {\n        \"name\": \"expungeDeletedResources\",\n        \"valueBoolean\": true\n      },\n      {\n        \"name\": \"count\",\n        \"valueInteger\": 100\n      }\n    ]\n  }",
+                "form": []
+            }
+        },
+        {
+            "_id": "47f6a7b5-71a7-4c71-9a16-58e3f9ea2ac4",
+            "colId": "7db94a2b-e374-4d77-9d4b-d68487af80b7",
+            "containerId": "86bba97f-4c9b-4da9-a29b-766eb241a993",
+            "name": "GET all Observations including deleted",
+            "url": "Observation/_history",
+            "method": "POST",
+            "sortNum": 80000,
+            "created": "2025-11-05T23:11:32.281Z",
+            "modified": "2025-11-05T23:11:54.830Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": " {\n    \"resourceType\": \"Parameters\",\n    \"parameter\": [\n      {\n        \"name\": \"expungeDeletedResources\",\n        \"valueBoolean\": true\n      },\n      {\n        \"name\": \"count\",\n        \"valueInteger\": 100\n      }\n    ]\n  }",
+                "form": []
+            }
+        },
+        {
+            "_id": "13635f22-4aba-4aea-9796-d73d5e1e5599",
+            "colId": "7db94a2b-e374-4d77-9d4b-d68487af80b7",
+            "containerId": "86bba97f-4c9b-4da9-a29b-766eb241a993",
+            "name": "GET all Encounters including deleted",
+            "url": "Observation/_history",
+            "method": "POST",
+            "sortNum": 90000,
+            "created": "2025-11-05T23:15:20.034Z",
+            "modified": "2025-11-05T23:15:20.034Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": " {\n    \"resourceType\": \"Parameters\",\n    \"parameter\": [\n      {\n        \"name\": \"expungeDeletedResources\",\n        \"valueBoolean\": true\n      },\n      {\n        \"name\": \"count\",\n        \"valueInteger\": 100\n      }\n    ]\n  }",
+                "form": []
+            }
+        },
+        {
+            "_id": "e5750fba-1b4b-4ae0-aaf9-8ce78a100432",
+            "colId": "7db94a2b-e374-4d77-9d4b-d68487af80b7",
+            "containerId": "86bba97f-4c9b-4da9-a29b-766eb241a993",
+            "name": "CAREFUL expunge ALL deleted Encounters",
+            "url": "Encounter/$expunge",
+            "method": "POST",
+            "sortNum": 95000,
+            "created": "2025-11-05T23:15:55.184Z",
+            "modified": "2025-11-05T23:16:19.939Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": " {\n    \"resourceType\": \"Parameters\",\n    \"parameter\": [\n      {\n        \"name\": \"expungeDeletedResources\",\n        \"valueBoolean\": true\n      },\n      {\n        \"name\": \"count\",\n        \"valueInteger\": 100\n      }\n    ]\n  }",
+                "form": []
+            }
+        },
+        {
+            "_id": "1939dc8b-9399-4a7c-bc18-1cb54493764d",
+            "colId": "7db94a2b-e374-4d77-9d4b-d68487af80b7",
+            "containerId": "d68ba393-ea81-4a5e-9dc6-adb913aeed46",
+            "name": "deploy afresh",
+            "url": "Patient/sparse-02",
+            "method": "PUT",
+            "sortNum": 20000,
+            "created": "2025-11-05T23:38:52.045Z",
+            "modified": "2025-11-05T23:39:14.393Z",
+            "headers": [],
+            "body": {
+                "type": "binary",
+                "raw": "",
+                "form": [],
+                "binary": "../sparse-tests/sparse-02.json"
+            }
+        },
+        {
+            "_id": "fdb926ab-68e5-4a2d-9207-3cc79c78de3c",
+            "colId": "7db94a2b-e374-4d77-9d4b-d68487af80b7",
+            "containerId": "d68ba393-ea81-4a5e-9dc6-adb913aeed46",
+            "name": "are you there?",
+            "url": "Patient/sparse-02/_history",
+            "method": "GET",
+            "sortNum": 30000,
+            "created": "2025-11-05T23:38:52.046Z",
+            "modified": "2025-11-05T23:39:27.772Z",
+            "headers": []
+        },
+        {
+            "_id": "bddb72f5-3644-4b8b-8021-62e186e32df1",
+            "colId": "7db94a2b-e374-4d77-9d4b-d68487af80b7",
+            "containerId": "d68ba393-ea81-4a5e-9dc6-adb913aeed46",
+            "name": "everything",
+            "url": "Patient/sparse-02/$everything",
+            "method": "GET",
+            "sortNum": 40000,
+            "created": "2025-11-05T23:38:52.047Z",
+            "modified": "2025-11-05T23:43:13.332Z",
+            "headers": []
+        },
+        {
+            "_id": "ba136d8e-42b0-4606-b32c-12f50515e022",
+            "colId": "7db94a2b-e374-4d77-9d4b-d68487af80b7",
+            "containerId": "286887db-ba99-40e9-8661-38091109abcf",
+            "name": "GET all Observations including deleted",
+            "url": "Observation/_history",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2025-11-05T23:38:52.051Z",
+            "modified": "2025-11-05T23:38:52.045Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": " {\n    \"resourceType\": \"Parameters\",\n    \"parameter\": [\n      {\n        \"name\": \"expungeDeletedResources\",\n        \"valueBoolean\": true\n      },\n      {\n        \"name\": \"count\",\n        \"valueInteger\": 100\n      }\n    ]\n  }",
+                "form": []
+            }
+        },
+        {
+            "_id": "0bb5f539-0f8e-496e-ac41-715fb413ab03",
+            "colId": "7db94a2b-e374-4d77-9d4b-d68487af80b7",
+            "containerId": "286887db-ba99-40e9-8661-38091109abcf",
+            "name": "CAREFUL expunge deleted Observations",
+            "url": "Observation/$expunge",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2025-11-05T23:38:52.052Z",
+            "modified": "2025-11-05T23:38:52.045Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": " {\n    \"resourceType\": \"Parameters\",\n    \"parameter\": [\n      {\n        \"name\": \"expungeDeletedResources\",\n        \"valueBoolean\": true\n      },\n      {\n        \"name\": \"count\",\n        \"valueInteger\": 100\n      }\n    ]\n  }",
+                "form": []
+            }
+        },
+        {
+            "_id": "c4b7d1a1-9854-4eeb-960c-3d628f6e53a1",
+            "colId": "7db94a2b-e374-4d77-9d4b-d68487af80b7",
+            "containerId": "286887db-ba99-40e9-8661-38091109abcf",
+            "name": "GET all Encounters including deleted",
+            "url": "Observation/_history",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2025-11-05T23:38:52.053Z",
+            "modified": "2025-11-05T23:38:52.045Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": " {\n    \"resourceType\": \"Parameters\",\n    \"parameter\": [\n      {\n        \"name\": \"expungeDeletedResources\",\n        \"valueBoolean\": true\n      },\n      {\n        \"name\": \"count\",\n        \"valueInteger\": 100\n      }\n    ]\n  }",
+                "form": []
+            }
+        },
+        {
+            "_id": "337df810-ccc3-4971-829c-c893ee9b72e6",
+            "colId": "7db94a2b-e374-4d77-9d4b-d68487af80b7",
+            "containerId": "286887db-ba99-40e9-8661-38091109abcf",
+            "name": "CAREFUL expunge ALL deleted Encounters",
+            "url": "Encounter/$expunge",
+            "method": "POST",
+            "sortNum": 40000,
+            "created": "2025-11-05T23:38:52.054Z",
+            "modified": "2025-11-05T23:38:52.045Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": " {\n    \"resourceType\": \"Parameters\",\n    \"parameter\": [\n      {\n        \"name\": \"expungeDeletedResources\",\n        \"valueBoolean\": true\n      },\n      {\n        \"name\": \"count\",\n        \"valueInteger\": 100\n      }\n    ]\n  }",
+                "form": []
+            }
+        },
+        {
+            "_id": "9398cf47-7882-4982-9d92-27b9e1011c9f",
+            "colId": "7db94a2b-e374-4d77-9d4b-d68487af80b7",
+            "containerId": "f7f2c607-f38d-444b-96ba-b8d96e393065",
+            "name": "deploy afresh",
+            "url": "Patient/sparse-03",
+            "method": "PUT",
+            "sortNum": 20000,
+            "created": "2025-11-14T01:00:03.863Z",
+            "modified": "2025-11-14T01:04:02.791Z",
+            "headers": [],
+            "body": {
+                "type": "binary",
+                "raw": "",
+                "form": [],
+                "binary": "../sparse-tests/sparse-03.json"
+            }
+        },
+        {
+            "_id": "f23f1843-dfa4-499f-bdb6-cf1d9935f844",
+            "colId": "7db94a2b-e374-4d77-9d4b-d68487af80b7",
+            "containerId": "f7f2c607-f38d-444b-96ba-b8d96e393065",
+            "name": "are you there?",
+            "url": "Patient/sparse-03/_history",
+            "method": "GET",
+            "sortNum": 30000,
+            "created": "2025-11-14T01:00:03.864Z",
+            "modified": "2025-11-14T01:04:07.528Z",
+            "headers": []
+        },
+        {
+            "_id": "2abd3a82-ebe0-4ef2-b2a6-b1c186512bba",
+            "colId": "7db94a2b-e374-4d77-9d4b-d68487af80b7",
+            "containerId": "f7f2c607-f38d-444b-96ba-b8d96e393065",
+            "name": "everything",
+            "url": "Patient/sparse-03/$everything",
+            "method": "GET",
+            "sortNum": 40000,
+            "created": "2025-11-14T01:00:03.865Z",
+            "modified": "2025-11-14T01:04:15.216Z",
+            "headers": []
+        }
+    ],
+    "settings": {
+        "headers": [
+            {
+                "name": "Content-Type",
+                "value": "application/fhir+json"
+            }
+        ],
+        "options": {
+            "baseUrl": "{{FHIR_SERVER_URL}}"
+        }
+    }
+}
